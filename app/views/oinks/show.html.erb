@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="list-group">
+          <div class="list-group-item">
+            <div class="media">
+              <div class="pull-left">
+                <img class="img-rounded media-object" src="<%= @oink.avatar_url %>"
+                  width="48" height="48" alt="<%= @oink.handle %>">
+              </div>
+              <div class="media-body">
+                <h5 class="media-heading">
+                  <div class="pull-right">
+                    <%= form_tag(oink_path(@oink.id), :method => "delete") do |form| %>
+                      <%= hidden_field("oink[id]", @oink.id) %>
+                      <%= submit_tag("X", :class => "btn btn-link btn-xs text-muted", :title => "Delete oink") %>
+                    <% end %>
+                  </div>
+                  @<%= @oink.handle %>
+                </h5>
+                <%= simple_format @oink.content, :class => "oink-content lead" %>
+              </div>
+              <hr>
+              <div class="text-muted">
+                <% created_at = @oink.created_at %>
+                <time datetime="<%= created_at %>">
+                  <%= DateTime.parse(created_at).strftime("%H:%M UTC - %d %b %Y") %>
+                </time>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
