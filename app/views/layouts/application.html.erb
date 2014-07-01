@@ -3,13 +3,17 @@
 <html>
   <head>
     <title>Oinker</title>
+    <link rel="icon" type="image/png" href="<%= image_path('oinker.png') %>">
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= csrf_meta_tags %>
   </head>
   <body>
     <nav class="navbar navbar-default" role="navigation">
       <div class="container">
-        <a class="navbar-brand" href="/">Oinker</a>
+        <a class="navbar-brand" href="/">
+          <img height="20" width="20" src="<%= image_path('oinker.png') %>" alt="" style="vertical-align: top;">
+          Oinker
+        </a>
       </div>
     </nav>
     <%= yield %>
