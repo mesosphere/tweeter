@@ -2,15 +2,15 @@
 
 1. Install Redis
 
-    brew install redis
+        brew install redis
 2. Start Redis
 
-    redis-server
+        redis-server
 3. Clone this repo
 4. Install dependencies
 
-    bundle install
+        bundle install
 5. Start the server
 
-    rails server
+        rails server
 6. Start oinking
