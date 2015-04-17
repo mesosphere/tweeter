@@ -1,0 +1,27 @@
+{
+    "id": "/rails-server-cassandra",
+    "container": {
+        "type": "DOCKER",
+        "docker": {
+            "image": "mesosphere/mockingbird-cassandra",
+            "network": "BRIDGE",
+            "portMappings": [
+                {
+                    "containerPort": 3000,
+                    "hostPort": 0,
+                    "protocol": "tcp"
+                }
+            ]
+        }
+    },
+    "healthChecks": [{
+        "protocol": "TCP",
+        "gracePeriodSeconds": 60,
+        "intervalSeconds": 60,
+        "portIndex": 0,
+        "timeoutSeconds": 15,
+        "maxConsecutiveFailures": 3
+    }],
+    "cpus": 1,
+    "mem": 256.0
+}
