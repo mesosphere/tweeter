@@ -1,0 +1,13 @@
+{
+    "id": "/cassandra-init",
+    "container": {
+        "type": "DOCKER",
+        "docker": {
+            "image": "spotify/cassandra",
+            "network": "HOST"
+        }
+    },
+    "cmd": "/usr/bin/cqlsh -e \"CREATE KEYSPACE oinker WITH replication = {'class': 'SimpleStrategy','replication_factor': 2}; CREATE TABLE oinker.oinks ( id VARCHAR, content VARCHAR, created_at timeuuid, handle VARCHAR, PRIMARY KEY (id) );\" cassandra-dcos-node.cassandra.dcos.mesos 9160 && sleep 9999999",
+    "cpus": 0.25,
+    "mem": 256.0
+}

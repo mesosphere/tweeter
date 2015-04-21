@@ -1,0 +1,2 @@
+docker run -i -t --net=host --entrypoint=/usr/bin/cqlsh spotify/cassandra -e "CREATE KEYSPACE mockingbird WITH replication = {'class': 'SimpleStrategy','replication_factor': 2};" cassandra.test-suite.node.cassandra.test-suite.mesos 9160
+docker run -i -t --net=host --entrypoint=/usr/bin/cqlsh spotify/cassandra -e "USE mockingbird; CREATE TABLE oinks ( id VARCHAR, content VARCHAR, created_at timeuuid, handle VARCHAR, PRIMARY KEY (id) )" cassandra.test-suite.node.cassandra.test-suite.mesos 9160

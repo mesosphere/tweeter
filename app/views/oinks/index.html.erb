@@ -36,8 +36,7 @@
             What are you waiting for?<br>Start oinking.
           </h3>
         <% else %>
-          <% @oinks.each do |c| %>
-            <% oink = Oink.find(c) %>
+          <% @oinks.each do |oink| %>
             <div class="list-group-item">
               <div class="media">
                 <div class="pull-left">
