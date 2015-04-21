@@ -1,9 +1,9 @@
 {
-    "id": "/rails-server-cassandra",
+    "id": "/oinker",
     "container": {
         "type": "DOCKER",
         "docker": {
-            "image": "mesosphere/mockingbird-cassandra",
+            "image": "mesosphere/oinker",
             "network": "BRIDGE",
             "portMappings": [
                 {
@@ -16,7 +16,7 @@
     },
     "healthChecks": [{
         "protocol": "TCP",
-        "gracePeriodSeconds": 60,
+        "gracePeriodSeconds": 300,
         "intervalSeconds": 60,
         "portIndex": 0,
         "timeoutSeconds": 15,

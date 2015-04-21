@@ -3,8 +3,8 @@ require 'time'
 
 class Oink
 
-  @@cluster = Cassandra.cluster(hosts: ['cassandra.dcos.node.cassandra.dcos.mesos'])
-  @@keyspace = 'mockingbird'
+  @@cluster = Cassandra.cluster(hosts: ['cassandra-dcos-node.cassandra.dcos.mesos'])
+  @@keyspace = 'oinker'
   @@session  = @@cluster.connect(@@keyspace)
   @@generator = Cassandra::Uuid::Generator.new
 
