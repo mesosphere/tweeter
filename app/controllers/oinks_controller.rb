@@ -1,6 +1,6 @@
+# Oinks coontroller
 class OinksController < ActionController::Base
-
-  layout "application"
+  layout 'application'
 
   def create
     Oink.create(oink_params)
@@ -19,7 +19,7 @@ class OinksController < ActionController::Base
   def show
     # Use existence of `created_at` as a proxy for existence
     unless Oink.all.include?(params[:id])
-      raise ActionController::RoutingError.new('Not Found')
+      fail ActionController::RoutingError, 'Not Found'
     end
 
     @oink = Oink.find(params[:id])
@@ -27,8 +27,7 @@ class OinksController < ActionController::Base
 
   private
 
-    def oink_params
-      params.require(:oink).permit(:content, :handle)
-    end
-
+  def oink_params
+    params.require(:oink).permit(:content, :handle)
+  end
 end

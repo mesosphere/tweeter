@@ -6,4 +6,6 @@ WORKDIR /rails
 
 EXPOSE 3000
 
-CMD bundle install && rails server
+RUN bundle install
+
+CMD rails server

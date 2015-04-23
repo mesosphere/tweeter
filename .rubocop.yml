@@ -1,0 +1,5 @@
+Metrics/AbcSize:
+  Enabled: false
+
+Style/ClassVars:
+  Enabled: false
