@@ -1,4 +1,4 @@
-FROM rails:latest
+FROM rails:4
 
 ADD . /rails
 
