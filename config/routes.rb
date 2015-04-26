@@ -7,4 +7,6 @@ Rails.application.routes.draw do
   root 'oinks#index'
 
   resources :oinks, except: %w(edit new update)
+
+  resources :analytics, except: %w(create edit new update show)
 end
