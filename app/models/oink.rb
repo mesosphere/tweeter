@@ -14,7 +14,7 @@ class Oink
   attr_writer :content, :created_at, :handle
 
   def avatar_url
-    "//robohash.org/#{handle}.png?size=48x48&amp;bgset=bg2"
+    "//robohash.org/#{handle}.png?size=144x144&amp;bgset=bg2"
   end
 
   def destroy
