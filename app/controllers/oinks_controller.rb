@@ -17,11 +17,6 @@ class OinksController < ActionController::Base
   end
 
   def show
-    # Use existence of `created_at` as a proxy for existence
-    unless Oink.all.include?(params[:id])
-      fail ActionController::RoutingError, 'Not Found'
-    end
-
     @oink = Oink.find(params[:id])
   end
 
