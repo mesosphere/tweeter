@@ -6,3 +6,6 @@ Style/ClassVars:
 
 Performance/ParallelAssignment:
   Enabled: false
+
+Metrics/MethodLength:
+  Max: 20

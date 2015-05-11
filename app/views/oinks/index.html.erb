@@ -48,18 +48,18 @@
                     <div class="pull-right">
                       <%= form_tag(oink_path(oink.id), :method => "delete") do |form| %>
                         <%= hidden_field("oink[id]", oink.id) %>
-                        <%= submit_tag("X", :class => "btn btn-link btn-xs text-muted", :title => "Delete oink") %>
+                        <!-- <%= submit_tag("X", :class => "btn btn-link btn-xs text-muted", :title => "Delete oink") %> -->
                       <% end %>
                     </div>
                     @<%= oink.handle %> &middot;
-                    <a href="<%= oink_path(oink.id) %>">
+                    <!-- <a href="<%= oink_path(oink.id) %>"> -->
                       <small>
                         <% created_at = oink.created_at %>
                         <time datetime="<%= created_at %>">
                           <%= time_ago_in_words(DateTime.parse(created_at)) %>
                         </time>
                       </small>
-                    </a>
+                    <!-- </a> -->
                   </h5>
                   <%= simple_format oink.content, :class => "oink-content" %>
                 </div>

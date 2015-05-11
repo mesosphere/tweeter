@@ -13,8 +13,10 @@ class Analytics
 
   def self.all(paged = false)
     results = @@session.execute(
-      'SELECT key, frequency FROM analytics ORDER BY frequency DESC',
-      page_size: 25, paging_state: (paged ? @@paging_state : nil)
+      'SELECT key, frequency FROM analytics ' \
+      'WHERE type = "oink" ORDER BY frequency DESC',
+      page_size: 25,
+      paging_state: (paged ? @@paging_state : nil)
     )
     @@paging_state = results.paging_state
     results.map do |anal|

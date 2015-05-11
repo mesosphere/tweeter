@@ -26,8 +26,11 @@ class Oink
 
   def self.all(paged = false)
     result = @@session.execute(
-      'SELECT id, content, created_at, handle FROM oinks ORDER BY created_at '\
-      'DESC', page_size: 25, paging_state: (paged ? @@paging_state : nil))
+      'SELECT id, content, created_at, handle FROM oinks ' \
+      'WHERE kind = "oink" ORDER BY created_at DESC',
+      page_size: 25,
+      paging_state: (paged ? @@paging_state : nil)
+    )
     @@paging_state = result.paging_state
     result.map do |oink|
       c = Oink.new
@@ -45,8 +48,9 @@ class Oink
     c.created_at = cassandra_time.to_time.utc.iso8601
     c.handle = params[:handle].downcase
     @@session.execute(
-      'INSERT INTO oinks (id, content, created_at, handle) VALUES (?, ?, ?, ?)',
-      arguments: [c.id, c.content, cassandra_time, c.handle])
+      'INSERT INTO oinks (kind, id, content, created_at, handle) ' \
+      'VALUES (?, ?, ?, ?, ?)',
+      arguments: ['oink', c.id, c.content, cassandra_time, c.handle])
     c
   end
 
