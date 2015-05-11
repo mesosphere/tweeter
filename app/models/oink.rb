@@ -25,7 +25,7 @@ class Oink
 
   def self.all
     @@session.execute(
-      'SELECT id, content, created_at, handle FROM oinks').map do |oink|
+      'SELECT id, content, created_at, handle FROM oinks ORDER BY created_at DESC').map do |oink|
       c = Oink.new
       c.id = oink['id']
       c.content = oink['content']
