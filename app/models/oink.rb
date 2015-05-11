@@ -24,10 +24,9 @@ class Oink
   end
 
   def self.all(limit = 50, page = 1)
-    _total = limit * page
     @@session.execute(
       'SELECT id, content, created_at, handle FROM oinks ' \
-      'ORDER BY created_at DESC LIMIT #{_total}'
+      "ORDER BY created_at DESC LIMIT #{limit * page}"
     ).last(limit).map do |oink|
       c = Oink.new
       c.id, c.content, c.handle = oink['id'], oink['content'], oink['handle']
