@@ -27,7 +27,8 @@ class Oink
   def self.all(paged = false)
     result = @@session.execute(
       'SELECT id, content, created_at, handle FROM oinks ' \
-      'WHERE kind = oink ORDER BY created_at DESC',
+      'WHERE kind = ? ORDER BY created_at DESC',
+      arguments: ['oink'],
       page_size: 25,
       paging_state: (paged ? @@paging_state : nil)
     )
