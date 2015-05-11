@@ -18,3 +18,4 @@
 #intellij
 /spark/.idea*
 /spark/target
+/spark/*.iml
