@@ -14,7 +14,8 @@ class Analytics
   def self.all(paged = false)
     results = @@session.execute(
       'SELECT key, frequency FROM analytics ' \
-      'WHERE type = "oink" ORDER BY frequency DESC',
+      'WHERE type = ? ORDER BY frequency DESC',
+      arguments: ['oink'],
       page_size: 25,
       paging_state: (paged ? @@paging_state : nil)
     )
