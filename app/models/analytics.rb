@@ -12,7 +12,7 @@ class Analytics
 
   def self.all
     unsorted = @@session.execute(
-      'SELECT key, frequency FROM analytics ORDER BY frequency DESC'
+      'SELECT key, frequency FROM analytics'
     ).map do |anal|
       c = Analytics.new
       c.key, c.frequency = anal['key'], anal['frequency']
