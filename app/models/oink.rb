@@ -8,6 +8,7 @@ class Oink
   @@keyspace = 'oinker'
   @@session  = @@cluster.connect(@@keyspace)
   @@generator = Cassandra::Uuid::Generator.new
+  @@paging_state = nil
 
   attr_accessor :id, :content, :created_at, :handle
 
@@ -23,10 +24,12 @@ class Oink
       arguments: [@id])
   end
 
-  def self.all(limit = 50, page = 1)
-    @@session.execute(
-      "SELECT id, content, created_at, handle FROM oinks LIMIT #{limit * page}"
-    ).last(limit).map do |oink|
+  def self.all(limit = 50, paged = false)
+    result = @@session.execute(
+      'SELECT id, content, created_at, handle FROM oinks',
+      page_size: limit, paging_state: (paged ? @@paging_state : nil))
+    @@paging_state = result.paging_state
+    result.map do |oink|
       c = Oink.new
       c.id, c.content, c.handle = oink['id'], oink['content'], oink['handle']
       c.created_at = oink['created_at'].to_time.utc.iso8601
