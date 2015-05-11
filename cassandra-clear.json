@@ -1,0 +1,13 @@
+{
+    "id": "/cassandra-clear",
+    "container": {
+        "type": "DOCKER",
+        "docker": {
+            "image": "spotify/cassandra",
+            "network": "HOST"
+        }
+    },
+    "cmd": "/usr/bin/cqlsh -e \"DROP TABLE oinker.oinks; DROP TABLE oinker.analytics; CREATE TABLE oinker.oinks ( kind VARCHAR, id VARCHAR, content VARCHAR, created_at timeuuid, handle VARCHAR, PRIMARY KEY (kind, created_at) ) WITH CLUSTERING ORDER BY (created_at DESC); CREATE TABLE oinker.analytics ( kind VARCHAR, key VARCHAR, frequency INT, PRIMARY KEY (kind, frequency) ) WITH CLUSTERING ORDER BY (frequency DESC);\" cassandra-dcos-node.cassandra.dcos.mesos 9160 && sleep 99999999",
+    "cpus": 0.1,
+    "mem": 256.0
+}
