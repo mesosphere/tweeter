@@ -52,7 +52,7 @@ object ShakespeareIngest {
     val modifiedLines = shakespeareRDD map { line =>
       var text = line.content
       authorSet foreach { author => //find author name in content
-        text = line.content.replace(author, "@"+author.toLowerCase.replace(" ", "_")) //add underscores in handles
+        text = line.content.replaceAllLiterally(author, "@"+author.toLowerCase.replace(" ", "_")) //add underscores
         text = text.substring(0, Math.min(text.length, 140)) //trim in case we exceed the 140 char limit
       }
       val author = line.handle.toLowerCase.replace(" ", "_") //underscores in handles
