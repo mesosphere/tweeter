@@ -13,7 +13,7 @@ class OinksController < ActionController::Base
   end
 
   def index
-    @oinks = Oink.all
+    @oinks = Oink.all(params[:paged].present?)
   end
 
   def show
