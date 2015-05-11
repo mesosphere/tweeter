@@ -13,7 +13,7 @@ class Analytics
 
   def self.all(paged = false)
     results = @@session.execute(
-      'SELECT key, frequency FROM analytics',
+      'SELECT key, frequency FROM analytics ORDER BY frequency DESC',
       page_size: 25, paging_state: (paged ? @@paging_state : nil)
     )
     @@paging_state = results.paging_state
