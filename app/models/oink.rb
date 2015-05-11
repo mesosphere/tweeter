@@ -26,8 +26,8 @@ class Oink
 
   def self.all(paged = false)
     result = @@session.execute(
-      'SELECT id, content, created_at, handle FROM oinks ORDER BY created_at DESC',
-      page_size: 25, paging_state: (paged ? @@paging_state : nil))
+      'SELECT id, content, created_at, handle FROM oinks ORDER BY created_at '\
+      'DESC', page_size: 25, paging_state: (paged ? @@paging_state : nil))
     @@paging_state = result.paging_state
     result.map do |oink|
       c = Oink.new
