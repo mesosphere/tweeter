@@ -7,19 +7,20 @@ class Analytics
     hosts: ['cassandra-dcos-node.cassandra.dcos.mesos'])
   @@keyspace = 'oinker'
   @@session  = @@cluster.connect(@@keyspace)
+  @@paging_state = nil
 
   attr_accessor :key, :frequency
 
-  def self.all
-    unsorted = @@session.execute(
-      'SELECT key, frequency FROM analytics'
-    ).map do |anal|
+  def self.all(paged = false)
+    results = @@session.execute(
+      'SELECT key, frequency FROM analytics',
+      page_size: 25, paging_state: (paged ? @@paging_state : nil)
+    )
+    @@paging_state = results.paging_state
+    results.map do |anal|
       c = Analytics.new
       c.key, c.frequency = anal['key'], anal['frequency']
       c
-    end
-    unsorted.sort do |a, b|
-      b.frequency <=> a.frequency
     end
   end
 end
