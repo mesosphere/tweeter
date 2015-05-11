@@ -3,3 +3,6 @@ Metrics/AbcSize:
 
 Style/ClassVars:
   Enabled: false
+
+Performance/ParallelAssignment:
+  Enabled: false
