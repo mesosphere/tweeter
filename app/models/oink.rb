@@ -23,14 +23,15 @@ class Oink
       arguments: [@id])
   end
 
-  def self.all
+  def self.all(limit = 50, page = 1)
+    _total = limit * page
     @@session.execute(
-      'SELECT id, content, created_at, handle FROM oinks ORDER BY created_at DESC').map do |oink|
+      'SELECT id, content, created_at, handle FROM oinks ' \
+      'ORDER BY created_at DESC LIMIT #{_total}'
+    ).last(limit).map do |oink|
       c = Oink.new
-      c.id = oink['id']
-      c.content = oink['content']
+      c.id, c.content, c.handle = oink['id'], oink['content'], oink['handle']
       c.created_at = oink['created_at'].to_time.utc.iso8601
-      c.handle = oink['handle']
       c
     end
   end
@@ -41,7 +42,7 @@ class Oink
     c.content = params[:content]
     cassandra_time = @@generator.now
     c.created_at = cassandra_time.to_time.utc.iso8601
-    c.handle = params[:handle]
+    c.handle = params[:handle].downcase
     @@session.execute(
       'INSERT INTO oinks (id, content, created_at, handle) VALUES (?, ?, ?, ?)',
       arguments: [c.id, c.content, cassandra_time, c.handle])
