@@ -3,7 +3,7 @@
     "container": {
         "type": "DOCKER",
         "docker": {
-            "image": "mesosphere/oinker",
+            "image": "mesosphere/oinker:shakespeare",
             "network": "BRIDGE",
             "portMappings": [
                 {
