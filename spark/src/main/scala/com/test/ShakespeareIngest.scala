@@ -26,7 +26,7 @@ object ShakespeareIngest {
     val sc = new SparkContext("local", "Shakespeare Ingest", conf)
 
     val shakespeare = new SQLContext(sc) //creating a Row RDD from JSON file. One object per line
-      .jsonFile("hdfs://hdfs/" + args.lift(1).getOrElse("/user/root/shakespeare_data.json"))
+      .jsonFile(args.lift(1).getOrElse("hdfs://hdfs/user/root/shakespeare_data.json"))
     shakespeare.printSchema() //null, line_id, line_number, play name, speaker, speech_number, text_entry
 
     val shakespeareRDD = shakespeare.rdd
