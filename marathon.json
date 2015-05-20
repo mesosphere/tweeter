@@ -1,5 +1,6 @@
 {
     "id": "/oinker",
+    "instances": 3,
     "container": {
         "type": "DOCKER",
         "docker": {
