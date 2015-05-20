@@ -3,7 +3,11 @@ package com.test
 import com.datastax.spark.connector._
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkContext, SparkConf}
+
 import java.util.{Calendar, UUID, Date}
+import java.io.File
+import java.net.URL
+import sys.process._
 
 case class Oink(kind: String, id: String, content: String, created_at: UUID, handle: String)
 
@@ -25,8 +29,14 @@ object ShakespeareIngest {
       .set("spark.cassandra.connection.host", args.lift(0).getOrElse("localhost")) //connect to cassandra
     val sc = new SparkContext("local", "Shakespeare Ingest", conf)
 
+    val url = args.lift(1)
+      .getOrElse("http://s3.amazonaws.com/downloads.mesosphere.io/dcos-demo/spark/shakespeare_data.json")
+    if (url.startsWith("http")) {
+      new URL(url) #> new File("/shakespeare_data.json") !!
+    }
+
     val shakespeare = new SQLContext(sc) //creating a Row RDD from JSON file. One object per line
-      .jsonFile(args.lift(1).getOrElse("hdfs://hdfs/user/root/shakespeare_data.json"))
+      .jsonFile(if (url.startsWith("http")) "file:///shakespeare_data.json" else url)
     shakespeare.printSchema() //null, line_id, line_number, play name, speaker, speech_number, text_entry
 
     val shakespeareRDD = shakespeare.rdd
