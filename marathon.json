@@ -17,11 +17,12 @@
     "healthChecks": [{
         "protocol": "TCP",
         "gracePeriodSeconds": 300,
-        "intervalSeconds": 60,
+        "intervalSeconds": 30,
         "portIndex": 0,
-        "timeoutSeconds": 15,
-        "maxConsecutiveFailures": 3
+        "timeoutSeconds": 10,
+        "maxConsecutiveFailures": 2
     }],
+    "cmd": "until rake cassandra:setup; do sleep 5; done && rails server",
     "ports": [12345],
     "cpus": 0.25,
     "mem": 256.0
