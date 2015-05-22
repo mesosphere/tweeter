@@ -1,0 +1,22 @@
+{
+  "id": "/oinker/router",
+  "cpus": 1,
+  "mem": 256,
+  "instances": 1,
+  "constraints": [["hostname", "UNIQUE"]],
+  "acceptedResourceRoles": ["slave_public"],
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "mesosphere/oinker-router:43e76e64d9f6c838f49915e048002f8809d8aacc",
+      "network": "BRIDGE",
+      "portMappings": [
+          {
+              "containerPort": 8080,
+              "hostPort": 80,
+              "protocol": "tcp"
+          }
+      ]
+    }
+  }
+}
