@@ -1,5 +1,5 @@
 {
-  "id": "/oinker/router",
+  "id": "/oinker-router",
   "cpus": 1,
   "mem": 256,
   "instances": 1,
