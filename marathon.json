@@ -17,7 +17,7 @@
     },
     "healthChecks": [{
         "protocol": "TCP",
-        "gracePeriodSeconds": 300,
+        "gracePeriodSeconds": 600,
         "intervalSeconds": 30,
         "portIndex": 0,
         "timeoutSeconds": 10,
