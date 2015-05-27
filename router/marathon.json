@@ -8,7 +8,7 @@
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "mesosphere/oinker-router:43e76e64d9f6c838f49915e048002f8809d8aacc",
+      "image": "mesosphere/oinker-router:52f01c6f808fcd226d5110bc7bfc3f2e11fefa34",
       "network": "BRIDGE",
       "portMappings": [
           {
