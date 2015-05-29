@@ -9,7 +9,7 @@ namespace :cassandra do
   @@session  = @@cluster.connect()
   @@session.execute(
     "CREATE KEYSPACE IF NOT EXISTS oinker WITH replication = \
-    {'class': 'SimpleStrategy','replication_factor': 2}")
+    {'class': 'SimpleStrategy','replication_factor': 3}")
   @@session.execute(
     "CREATE TABLE IF NOT EXISTS oinker.oinks ( \
     	kind VARCHAR, \
