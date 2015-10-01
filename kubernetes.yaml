@@ -20,7 +20,7 @@ items:
       spec:
         containers:
         - name: server
-          image: mesosphere/oinker:shakespeare
+          image: karlkfi/oinker:shakespeare-k8s
           command:
           - "/bin/bash"
           - "-ceu"
