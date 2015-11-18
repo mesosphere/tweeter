@@ -1,5 +1,5 @@
 {
-  "id": "/oinker-router",
+  "id": "/tweeter-router",
   "cpus": 1,
   "mem": 256,
   "instances": 1,
@@ -8,7 +8,7 @@
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "mesosphere/oinker-router:06506e020400bdc89b5e0a510993f5f62227a8e2",
+      "image": "mesosphere/tweeter-router:06506e020400bdc89b5e0a510993f5f62227a8e2",
       "network": "BRIDGE",
       "portMappings": [
           {

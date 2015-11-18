@@ -1,10 +1,10 @@
 {
-    "id": "/oinker",
+    "id": "/tweeter",
     "instances": 3,
     "container": {
         "type": "DOCKER",
         "docker": {
-            "image": "mesosphere/oinker:shakespeare",
+            "image": "mesosphere/tweeter:shakespeare",
             "network": "BRIDGE",
             "portMappings": [
                 {

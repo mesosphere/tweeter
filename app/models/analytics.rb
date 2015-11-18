@@ -1,11 +1,11 @@
 require 'cassandra'
 require 'time'
 
-# Oink class that talks to Cassandra
+# Tweet class that talks to Cassandra
 class Analytics
   @@cluster = Cassandra.cluster(
     hosts: ['cassandra-dcos-node.cassandra.dcos.mesos'])
-  @@keyspace = 'oinker'
+  @@keyspace = 'tweeter'
   @@session  = @@cluster.connect(@@keyspace)
   @@paging_state = nil
 
@@ -15,7 +15,7 @@ class Analytics
     results = @@session.execute(
       'SELECT key, frequency FROM analytics ' \
       'WHERE kind = ? ORDER BY frequency DESC',
-      arguments: ['oink'],
+      arguments: ['tweet'],
       page_size: 25,
       paging_state: (paged ? @@paging_state : nil)
     )

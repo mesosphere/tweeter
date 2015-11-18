@@ -5,13 +5,13 @@ namespace :cassandra do
   task :setup => :environment do
   	@@cluster = Cassandra.cluster(
     hosts: ['cassandra-dcos-node.cassandra.dcos.mesos'])
-  @@keyspace = 'oinker'
+  @@keyspace = 'tweeter'
   @@session  = @@cluster.connect()
   @@session.execute(
-    "CREATE KEYSPACE IF NOT EXISTS oinker WITH replication = \
+    "CREATE KEYSPACE IF NOT EXISTS tweeter WITH replication = \
     {'class': 'SimpleStrategy','replication_factor': 2}")
   @@session.execute(
-    "CREATE TABLE IF NOT EXISTS oinker.oinks ( \
+    "CREATE TABLE IF NOT EXISTS tweeter.tweets ( \
     	kind VARCHAR, \
     	id VARCHAR, \
     	content VARCHAR, \
@@ -21,7 +21,7 @@ namespace :cassandra do
     ) WITH CLUSTERING ORDER BY (created_at DESC)"
 	)
 	@@session.execute(
-		"CREATE TABLE IF NOT EXISTS oinker.analytics ( \
+		"CREATE TABLE IF NOT EXISTS tweeter.analytics ( \
 			kind VARCHAR, \
 			key VARCHAR, \
 			frequency INT, \

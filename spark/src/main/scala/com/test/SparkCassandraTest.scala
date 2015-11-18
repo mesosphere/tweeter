@@ -19,9 +19,9 @@ object SparkCassandraTest {
     //create a spark configuration to connect to cassandra
     val conf = new SparkConf(true).set("spark.cassandra.connection.host", args.lift(0).getOrElse("localhost"))
     //setup a spark job and create an RDD from a cassandra table
-    val rdd = new SparkContext("local", "Oinker Analytics", conf)
-      .cassandraTable("oinker", "oinks")
-    //turn every 'oink' into a series of words
+    val rdd = new SparkContext("local", "Tweeter Analytics", conf)
+      .cassandraTable("tweeter", "tweets")
+    //turn every 'tweet' into a series of words
     val words = rdd.flatMap(o =>
       o.getString("content") //using the 'content' field
         .replaceAll("[^a-zA-Z ]", "") //only letters and spaces
@@ -31,7 +31,7 @@ object SparkCassandraTest {
         .map(w => (w, 1)) //identity
         .reduceByKey(_ + _) //adding frequency
         .filter(t => t._1 != "" && !stoplist.contains(t._1)) //remove items in stoplist
-        .map(t => new Frequency("oink", t._1, t._2))
-    freqs.saveToCassandra("oinker", "analytics", SomeColumns("kind", "key", "frequency"))
+        .map(t => new Frequency("tweet", t._1, t._2))
+    freqs.saveToCassandra("tweeter", "analytics", SomeColumns("kind", "key", "frequency"))
   }
 }

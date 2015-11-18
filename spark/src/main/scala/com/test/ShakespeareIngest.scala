@@ -9,7 +9,7 @@ import java.io.File
 import java.net.URL
 import sys.process._
 
-case class Oink(kind: String, id: String, content: String, created_at: UUID, handle: String)
+case class Tweet(kind: String, id: String, content: String, created_at: UUID, handle: String)
 
 object ShakespeareIngest {
   //weird date hack for cassandra
@@ -41,14 +41,14 @@ object ShakespeareIngest {
 
     val shakespeareRDD = shakespeare.rdd
       .filter(!_.isNullAt(1)) //filter erroneous rows
-      .map( r => Oink( //create Oink object
-        "oink",
+      .map( r => Tweet( //create Tweet object
+        "tweet",
         r.getLong(1).hashCode.toString, //random id
         r.getString(6).substring(0, Math.min(r.getString(6).length,140)), //max 140 characters
         uuidForDate(Calendar.getInstance.getTime),
         r.getString(4).replaceAll("[^a-zA-Z ]","") //speaker name
       ))
 
-    shakespeareRDD.saveToCassandra("oinker", "oinks", SomeColumns("kind", "id", "content", "created_at", "handle"))
+    shakespeareRDD.saveToCassandra("tweeter", "tweets", SomeColumns("kind", "id", "content", "created_at", "handle"))
   }
 }
