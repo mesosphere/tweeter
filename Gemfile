@@ -10,6 +10,9 @@ gem 'uglifier', '>= 1.3.0'
 # Use Cassandra Driver as primary storage
 gem 'cassandra-driver', '~> 2.1'
 
+# Kafka for logging tweets
+gem 'ruby-kafka', '~> 0.2.0'
+
 # Spring speeds up development by keeping your application running
 # in the background. Read more: https://github.com/rails/spring
 gem 'spring', group: :development

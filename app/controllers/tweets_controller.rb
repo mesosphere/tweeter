@@ -3,7 +3,8 @@ class TweetsController < ActionController::Base
   layout 'application'
 
   def create
-    Tweet.create(tweet_params)
+    @tweet = Tweet.create(tweet_params)
+    log_tweet(@tweet)
     redirect_to root_path
   end
 
@@ -24,5 +25,13 @@ class TweetsController < ActionController::Base
 
   def tweet_params
     params.require(:tweet).permit(:content, :handle)
+  end
+
+  def log_tweet(tweet)
+    # TODO move producer setup out of request/response cycle
+    kafka = Kafka.new(KAFKA_OPTIONS)
+    producer = kafka.producer
+    producer.produce(tweet.content, topic: KAFKA_TOPIC)
+    producer.deliver_messages
   end
 end
