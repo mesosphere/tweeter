@@ -3,8 +3,7 @@ require 'time'
 
 # Tweet class that talks to Cassandra
 class Tweet
-  @@cluster = Cassandra.cluster(
-    hosts: ['cassandra-dcos-node.cassandra.dcos.mesos'])
+  @@cluster = Cassandra.cluster(CASSANDRA_OPTIONS)
   @@keyspace = 'tweeter'
   @@session  = @@cluster.connect(@@keyspace)
   @@generator = Cassandra::Uuid::Generator.new
