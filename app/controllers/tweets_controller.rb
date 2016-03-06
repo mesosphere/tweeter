@@ -31,7 +31,7 @@ class TweetsController < ActionController::Base
     # TODO move producer setup out of request/response cycle
     kafka = Kafka.new(KAFKA_OPTIONS)
     producer = kafka.producer
-    producer.produce(tweet.content, topic: KAFKA_TOPIC)
+    producer.produce(tweet.to_json, topic: KAFKA_TOPIC)
     producer.deliver_messages
   end
 end

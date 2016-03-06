@@ -3,6 +3,8 @@ require 'time'
 
 # Tweet class that talks to Cassandra
 class Tweet
+  include ActiveModel::Serialization
+
   @@cluster = Cassandra.cluster(CASSANDRA_OPTIONS)
   @@keyspace = 'tweeter'
   @@session  = @@cluster.connect(@@keyspace)
@@ -11,10 +13,12 @@ class Tweet
 
   attr_accessor :id, :content, :created_at, :handle
 
-  attr_writer :content, :created_at, :handle
-
   def avatar_url
     "//robohash.org/#{handle}.png?size=144x144&amp;bgset=bg2"
+  end
+
+  def attributes
+    {'id' => id, 'content' => content, 'created_at' => created_at, 'handle' => handle}
   end
 
   def destroy
