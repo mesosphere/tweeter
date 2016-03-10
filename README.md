@@ -14,8 +14,7 @@ You'll need a DCOS cluster with one public node and at least five private nodes.
 
 Add the Multiverse as a package source:
 
-    dcos config prepend package.sources https://github.com/mesosphere/multiverse/archive/version-2.x.zip
-    dcos package update
+    dcos package repo add multiverse https://github.com/mesosphere/multiverse/archive/version-2.x.zip
 
 Install packages:
 
