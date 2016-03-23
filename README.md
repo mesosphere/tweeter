@@ -80,8 +80,8 @@ Install the Zeppelin package:
 
     dcos package install --yes zeppelin
 
-Add the label `HAPROXY_0_PORT=10003` to the Zeppelin marathon app so that marathon-lb proxies to it on that port.
+Add the role `slave_public` to the Zeppelin marathon app so that marathon launches it on the 
 
-Navigate to Zeppelin at `http://<public_ip>:10003` and load the Spark Notebook from `spark-notebook.json`. Zeppelin is preconfigured to execute Spark jobs on the DCOS cluster, so there is no further configuration or setup required.
+Navigate to Zeppelin at `http://<public_ip>:<marathon port>` and load the Spark Notebook from `spark-notebook.json`. Zeppelin is preconfigured to execute Spark jobs on the DCOS cluster, so there is no further configuration or setup required.
 
 Run the *Load Dependencies* step to load the required libraries into Zeppelin. Next, run the *Spark Streaming* step, which reads the tweet stream from Zookeeper, and puts them into a temporary table that can be queried using SparkSQL. Next, run the *Top Tweeters* SQL query, which counts the number of tweets per user, using the table created in the previous step. The table updates continuously as new tweets come in, so re-running the query will produce a different result every time.
