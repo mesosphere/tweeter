@@ -80,7 +80,7 @@ Install the Zeppelin package:
 
     dcos package install --yes zeppelin
 
-Add the role `slave_public` to the Zeppelin marathon app so that marathon launches it on the 
+Add the role `slave_public` to the Zeppelin marathon app so that marathon launches it on the public slave.
 
 Navigate to Zeppelin at `http://<public_ip>:<marathon port>` and load the Spark Notebook from `spark-notebook.json`. Zeppelin is preconfigured to execute Spark jobs on the DCOS cluster, so there is no further configuration or setup required.
 
