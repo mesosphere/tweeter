@@ -5,7 +5,7 @@ require File.expand_path('../boot', __FILE__)
 # Include individual models to prevent initializing ActiveRecord
 # See: http://stackoverflow.com/a/19078854/368697
 require 'action_controller/railtie'
-require 'action_mailer/railtie'
+require 'active_model/railtie'
 require 'rails/test_unit/railtie'
 require 'sprockets/railtie'
 

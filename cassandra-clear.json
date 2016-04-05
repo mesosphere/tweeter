@@ -1,0 +1,13 @@
+{
+    "id": "/cassandra-clear",
+    "container": {
+        "type": "DOCKER",
+        "docker": {
+            "image": "spotify/cassandra",
+            "network": "HOST"
+        }
+    },
+    "cmd": "/usr/bin/cqlsh -e \"TRUNCATE tweeter.tweets; TRUNCATE tweeter.analytics;\" cassandra-dcos-node.cassandra.dcos.mesos 9160 && sleep 99999999",
+    "cpus": 0.1,
+    "mem": 256.0
+}

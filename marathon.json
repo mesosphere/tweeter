@@ -1,28 +1,37 @@
 {
-    "id": "/oinker",
+    "id": "/tweeter",
+    "instances": 3,
     "container": {
         "type": "DOCKER",
         "docker": {
-            "image": "mesosphere/oinker",
+            "image": "mesosphere/tweeter",
             "network": "BRIDGE",
             "portMappings": [
                 {
                     "containerPort": 3000,
-                    "hostPort": 12345,
+                    "hostPort": 0,
+                    "servicePort": 10000,
                     "protocol": "tcp"
                 }
             ]
         }
     },
     "healthChecks": [{
-        "protocol": "TCP",
-        "gracePeriodSeconds": 300,
-        "intervalSeconds": 60,
-        "portIndex": 0,
-        "timeoutSeconds": 15,
-        "maxConsecutiveFailures": 3
+        "protocol": "HTTP",
+        "portIndex": 0
     }],
-    "ports": [12345],
+    "labels":{
+        "HAPROXY_GROUP": "external",
+        "HAPROXY_0_PORT": "10000"
+    },
+    "env":{
+        "RAILS_ENV": "production",
+        "SECRET_KEY_BASE": "be6ea21bd0e8ddad06accbdfbfcbc6f120815744a8177fb1196442c1670401c86a1d020f1fb62f9b7d6bacc8cf818de277d23d3f3e7dcf704ca88965e5b9ed86",
+        "CASSANDRA_HOSTS": "cassandra-dcos-node.cassandra.dcos.mesos",
+        "KAFKA_BROKERS": "broker-0.kafka.mesos:1025"
+    },
+    "cmd": "until rake cassandra:setup; do sleep 5; done && rails server",
+    "ports": [0],
     "cpus": 0.25,
     "mem": 256.0
 }

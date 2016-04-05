@@ -4,9 +4,9 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'oinks#index'
+  root 'tweets#index'
 
-  resources :oinks, except: %w(edit new update)
+  resources :tweets, except: %w(edit new update)
 
   resources :analytics, except: %w(create edit new update show)
 end

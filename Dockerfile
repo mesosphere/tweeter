@@ -1,11 +1,3 @@
-FROM rails:4.1
+FROM rails:onbuild
 
-ADD . /rails
-
-WORKDIR /rails
-
-EXPOSE 3000
-
-RUN bundle install
-
-CMD rails server
+RUN bin/rake assets:precompile

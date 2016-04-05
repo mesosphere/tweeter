@@ -1,0 +1,73 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <%= form_tag("/tweets", :method => "post") do |form| %>
+            <div class="form-group">
+              <%= label_tag "tweet[handle]", "Handle" %>
+              <%= text_field_tag "tweet[handle]", nil,
+                :autofocus => true,
+                :class => "form-control",
+                :maxlength => 15,
+                :required => true,
+                :pattern => "^[\\S]*$",
+                :title => "Handles cannot contain spaces" %>
+            </div>
+            <div class="form-group">
+              <%= label_tag "tweet[content]", "Compose new Tweet" %>
+              <%= text_area_tag "tweet[content]", nil,
+                :class => "form-control",
+                :maxlength => 140,
+                :required => true,
+                :style => "resize: vertical;" %>
+            </div>
+            <div class="form-group clearfix">
+              <%= submit_tag("Tweet", :class => "btn btn-primary btn-sm pull-right") %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="list-group">
+        <% if @tweets.length < 1 %>
+          <h3 class="text-muted text-center">
+            What are you waiting for?<br>Start tweeting.
+          </h3>
+        <% else %>
+          <% @tweets.each do |tweet| %>
+            <div class="list-group-item">
+              <div class="media">
+                <div class="pull-left">
+                  <img class="img-rounded media-object" src="<%= tweet.avatar_url %>"
+                    width="48" height="48" alt="<%= tweet.handle %>">
+                </div>
+                <div class="media-body">
+                  <h5 class="media-heading">
+                    <div class="pull-right">
+                      <%= form_tag(tweet_path(tweet.id), :method => "delete") do |form| %>
+                        <%= hidden_field("tweet[id]", tweet.id) %>
+                        <!-- <%= submit_tag("X", :class => "btn btn-link btn-xs text-muted", :title => "Delete tweet") %> -->
+                      <% end %>
+                    </div>
+                    @<%= tweet.handle %> &middot;
+                    <!-- <a href="<%= tweet_path(tweet.id) %>"> -->
+                      <small>
+                        <% created_at = tweet.created_at %>
+                        <time datetime="<%= created_at %>">
+                          <%= time_ago_in_words(DateTime.parse(created_at)) %>
+                        </time>
+                      </small>
+                    <!-- </a> -->
+                  </h5>
+                  <%= simple_format tweet.content, :class => "tweet-content" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

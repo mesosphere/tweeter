@@ -3,3 +3,9 @@ Metrics/AbcSize:
 
 Style/ClassVars:
   Enabled: false
+
+Performance/ParallelAssignment:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 20
