@@ -11,7 +11,7 @@ Capabilities:
 ## Configure Your Machine
 
 You'll need Ruby and a couple of libraries on your local machine to hack on this
-app, and to send tweets to it.
+app. If you just want to run the demo, you don't need this.
 
 ### Homebrew on Mac OS X
 
@@ -68,7 +68,7 @@ Traffic is routed to the app via marathon-lb. Navigate to `http://<public_ip>:10
 
 Post a lot of Shakespeare tweets from a file:
 
-    bin/rake shakespeare:tweet shakespeare-data.json http://<public_ip>:10000
+    bin/tweet shakespeare-tweets.json http://<public_ip>:10000
 
 This will post more than 100k tweets one by one, so you'll see them coming in steadily when you refresh the page.
 
