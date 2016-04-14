@@ -8,31 +8,6 @@ Capabilities:
 * streams tweets to Kafka as they come in
 * real time tweet analytics on via Spark and Zeppelin
 
-## Configure Your Machine
-
-You'll need Ruby and a couple of libraries on your local machine to hack on this
-app. If you just want to run the demo, you don't need this.
-
-### Homebrew on Mac OS X
-
-Using Homebrew, install `rbenv`, a Ruby version manager:
-
-    brew update
-    brew install rbenv
-
-Run this command and follow the instructions to setup your environment:
-
-    rbenv init
-
-To install the required Ruby version for Tweeter, run from inside this repo:
-
-    rbenv install
-
-Then install the Ruby package manager and Tweeter's dependencies. From this repo run:
-
-    gem install bundler
-    bundle install
-
 ## Install and Configure Prerequisites on the Cluster
 
 You'll need a DCOS cluster with one public node and at least five private nodes.
@@ -85,3 +60,28 @@ Add the role `slave_public` to the Zeppelin marathon app so that marathon launch
 Navigate to Zeppelin at `http://<public_ip>:<marathon port>` and load the Spark Notebook from `spark-notebook.json`. Zeppelin is preconfigured to execute Spark jobs on the DCOS cluster, so there is no further configuration or setup required.
 
 Run the *Load Dependencies* step to load the required libraries into Zeppelin. Next, run the *Spark Streaming* step, which reads the tweet stream from Zookeeper, and puts them into a temporary table that can be queried using SparkSQL. Next, run the *Top Tweeters* SQL query, which counts the number of tweets per user, using the table created in the previous step. The table updates continuously as new tweets come in, so re-running the query will produce a different result every time.
+
+## Developing Tweeter
+
+You'll need Ruby and a couple of libraries on your local machine to hack on this
+app. If you just want to run the demo, you don't need this.
+
+### Homebrew on Mac OS X
+
+Using Homebrew, install `rbenv`, a Ruby version manager:
+
+    brew update
+    brew install rbenv
+
+Run this command and follow the instructions to setup your environment:
+
+    rbenv init
+
+To install the required Ruby version for Tweeter, run from inside this repo:
+
+    rbenv install
+
+Then install the Ruby package manager and Tweeter's dependencies. From this repo run:
+
+    gem install bundler
+    bundle install
