@@ -16,8 +16,8 @@ You'll need a DCOS cluster with one public node and at least five private nodes,
 Install package CLIs:
 
 ```base
-$ docs package install cassandra --cli
-$ docs package install kafka --cli
+$ dcos package install cassandra --cli
+$ dcos package install kafka --cli
 ```
 
 Look up the public agent IP in AWS. You need the IP of the EC2 host, not the ELB. Use this to replace `<agent_public_ip>` further down.
