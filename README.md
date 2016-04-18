@@ -12,7 +12,7 @@ Capabilities:
 
 You'll need a DCOS cluster with one public node and at least five private nodes.
 
-Add the Multiverse as a package source:
+NOTE: Following step is NOT necessary for DCOS 1.7. Add the Multiverse as a package source:
 
     dcos package repo add multiverse https://github.com/mesosphere/multiverse/archive/version-2.x.zip
 
@@ -22,7 +22,7 @@ Install packages:
     dcos package install --yes cassandra
     dcos package install --yes kafka
 
-Wait until the Kafka service shows up in the DCOS UI, then add and start the Kafka brokers:
+NOTE: Following steps is NOT necessary for DCOS 1.7. 3 Kafka Brokers will be deployed and started automatically when you install the Package. Wait until the Kafka service shows up in the DCOS UI, then add and start the Kafka brokers:
 
     dcos kafka broker add 0,1,2
     dcos kafka broker start 0,1,2
@@ -35,7 +35,7 @@ Launch three instances of Tweeter on Marathon using the config file in this repo
 
     dcos marathon app add marathon.json
 
-The app talks to Cassandra via `cassandra-dcos-node.cassandra.dcos.mesos`, and Kafka via `broker-0.kafka.mesos:1025`. If your cluster uses different names for Cassandra or Kafka, edit `marathon.json` first.
+The app talks to Cassandra via `node-0.cassandra.dcos.mesos`, and Kafka via `broker-0.kafka.mesos:1025`. If your cluster uses different names for Cassandra or Kafka, edit `marathon.json` first.
 
 Traffic is routed to the app via marathon-lb. Navigate to `http://<public_ip>:10000` to see the Tweeter UI and post a Tweet.
 
