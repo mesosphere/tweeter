@@ -27,7 +27,7 @@
     "env":{
         "RAILS_ENV": "production",
         "SECRET_KEY_BASE": "be6ea21bd0e8ddad06accbdfbfcbc6f120815744a8177fb1196442c1670401c86a1d020f1fb62f9b7d6bacc8cf818de277d23d3f3e7dcf704ca88965e5b9ed86",
-        "CASSANDRA_HOSTS": "cassandra-dcos-node.cassandra.dcos.mesos",
+        "CASSANDRA_HOSTS": "node-0.cassandra.mesos",
         "KAFKA_BROKERS": "broker-0.kafka.mesos:1025"
     },
     "cmd": "until rake cassandra:setup; do sleep 5; done && rails server",
