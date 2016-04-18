@@ -8,100 +8,58 @@ Capabilities:
 * streams tweets to Kafka as they come in
 * real time tweet analytics on via Spark and Zeppelin
 
-
 ## Install and Configure Prerequisites on the Cluster
 
-You'll need a DCOS cluster with one public node and at least five private nodes, DCOS CLI, and DCOS package CLIs.
+You'll need a DCOS cluster with one public node and at least five private nodes.
 
-Install package CLIs:
+Add the Multiverse as a package source:
 
-```base
-$ docs package install cassandra --cli
-$ docs package install kafka --cli
-```
+    dcos package repo add multiverse https://github.com/mesosphere/multiverse/archive/version-2.x.zip
 
-Look up the public agent IP in AWS. You need the IP of the EC2 host, not the ELB. Use this to replace `<agent_public_ip>` further down.
+Install packages:
 
-Look up the public master IP in AWS. You need the IP of the EC2 host, not the ELB. Use this to replace `<master_public_ip>` further down.
+    dcos package install --yes marathon-lb
+    dcos package install --yes cassandra
+    dcos package install --yes kafka
 
+Wait until the Kafka service shows up in the DCOS UI, then add and start the Kafka brokers:
 
-## Demo steps
+    dcos kafka broker add 0,1,2
+    dcos kafka broker start 0,1,2
 
-Install packages for DCOS UI:
-* kafka
-* cassandra
-* zeppelin
-* marathon-lb
+Look up the public slave IP in AWS. You need the IP of the EC2 host, not the ELB. Use this to replace `<public_ip>` further down.
 
-Wait until the Kafka and Cassandra services are healthly.
-
-## Lookup Kafka broker addresses
-
-Lookup the connection setting for Kafka:
-    
-```base
-$ docs kafka connection
-```
-    
-The output should look similar:
-```json
-{
-    "address": [
-        "10.0.3.62:9557",
-        "10.0.3.59:9757",
-        "10.0.3.58:9504"
-    ],
-    "dns": [
-        "broker-0.kafka.mesos:9557",
-        "broker-1.kafka.mesos:9757",
-        "broker-2.kafka.mesos:9504"
-    ],
-    "zookeeper": "master.mesos:2181/kafka"
-}
-```
-
-## Edit the Tweeter service config
-
-Edit the `KAFKA_BROKERS` environment variable in `tweeter.json` to match your environment. For example:
-
-```bash
-...
-"KAFKA_BROKERS": "broker-0.kafka.mesos:9557"
-...
-```
-
-## Run the Tweeter service
+## Run the Tweeter App
 
 Launch three instances of Tweeter on Marathon using the config file in this repo:
 
-```bash
-$ dcos marathon app add tweeter.json
-```
+    dcos marathon app add marathon.json
 
-The service talks to Cassandra via `node-0.cassandra.mesos:9042`, and Kafka via `broker-0.kafka.mesos:9557` in this example.
+The app talks to Cassandra via `cassandra-dcos-node.cassandra.dcos.mesos`, and Kafka via `broker-0.kafka.mesos:1025`. If your cluster uses different names for Cassandra or Kafka, edit `marathon.json` first.
 
-Traffic is routed to the service via marathon-lb. Navigate to `http://<agent_public_ip>:10000` to see the Tweeter UI and post a Tweet.
-
+Traffic is routed to the app via marathon-lb. Navigate to `http://<public_ip>:10000` to see the Tweeter UI and post a Tweet.
 
 ## Post a lot of Tweets
 
 Post a lot of Shakespeare tweets from a file:
 
-```bash
-bin/tweet shakespeare-tweets.json http://<public_ip>:10000
-```
+    bin/tweet shakespeare-tweets.json http://<public_ip>:10000
 
 This will post more than 100k tweets one by one, so you'll see them coming in steadily when you refresh the page.
-
 
 ## Streaming Analytics
 
 Next, we'll do real-time analytics on the stream of tweets coming in from Kafka.
 
-Navigate to Zeppelin at `http://<master_public_ip>/service/zeppelin/`, click `Import note` and import `spark-notebook.json`. Zeppelin is preconfigured to execute Spark jobs on the DCOS cluster, so there is no further configuration or setup required.
+Install the Zeppelin package:
+
+    dcos package install --yes zeppelin
+
+Add the role `slave_public` to the Zeppelin marathon app so that marathon launches it on the public slave.
+
+Navigate to Zeppelin at `http://<public_ip>:<marathon port>` and load the Spark Notebook from `spark-notebook.json`. Zeppelin is preconfigured to execute Spark jobs on the DCOS cluster, so there is no further configuration or setup required.
 
 Run the *Load Dependencies* step to load the required libraries into Zeppelin. Next, run the *Spark Streaming* step, which reads the tweet stream from Zookeeper, and puts them into a temporary table that can be queried using SparkSQL. Next, run the *Top Tweeters* SQL query, which counts the number of tweets per user, using the table created in the previous step. The table updates continuously as new tweets come in, so re-running the query will produce a different result every time.
-
 
 ## Developing Tweeter
 
