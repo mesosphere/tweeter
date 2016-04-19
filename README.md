@@ -86,7 +86,7 @@ Traffic is routed to the service via marathon-lb. Navigate to `http://<agent_pub
 Post a lot of Shakespeare tweets from a file:
 
 ```bash
-$ bin/tweet shakespeare-tweets.json http://<public_ip>:10000
+$ bin/tweet shakespeare-tweets.json http://<agent_public_ip>:10000
 ```
 
 This will post more than 100k tweets one by one, so you'll see them coming in steadily when you refresh the page.
