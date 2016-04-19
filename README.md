@@ -40,7 +40,7 @@ Wait until the Kafka and Cassandra services are healthly.
 Lookup the connection setting for Kafka:
     
 ```base
-$ docs kafka connection
+$ dcos kafka connection
 ```
     
 The output should look similar:
