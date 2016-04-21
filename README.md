@@ -100,7 +100,8 @@ Navigate to Zeppelin at `http://<master_public_ip>/service/zeppelin/`, click `Im
 
 Run the *Load Dependencies* step to load the required libraries into Zeppelin. Next, run the *Spark Streaming* step, which reads the tweet stream from Zookeeper, and puts them into a temporary table that can be queried using SparkSQL. Next, run the *Top Tweeters* SQL query, which counts the number of tweets per user, using the table created in the previous step. The table updates continuously as new tweets come in, so re-running the query will produce a different result every time.
 
-NOTE: if /service/zeppelin is showing as Disconnected (and hence can’t load the notebook), add the following labels to the zeppelin service and restart:
+
+NOTE: if /service/zeppelin is showing as Disconnected (and hence can’t load the notebook), you can instead redirect Zeppelin out the ELB using Marathon-LB. To do this, add the following labels to the zeppelin service and restart:
 
 
 `HAPROXY_0_VHOST = [elb hostname]`
@@ -108,6 +109,7 @@ NOTE: if /service/zeppelin is showing as Disconnected (and hence can’t load th
 `HAPROXY_GROUP = external`
 
 You can get the ELB hostname from the CCM “Public Server” link.  Once Zeppelin restarts, this should allow you to use that link to reach the Zeppelin GUI in “connected” mode.
+
 
 
 ## Developing Tweeter
