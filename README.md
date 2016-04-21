@@ -103,8 +103,9 @@ Run the *Load Dependencies* step to load the required libraries into Zeppelin. N
 NOTE: if /service/zeppelin is showing as Disconnected (and hence can’t load the notebook), add the following labels to the zeppelin service and restart:
 
 
-HAPROXY_0_VHOST = [elb hostname]
-HAPROXY_GROUP = external
+`HAPROXY_0_VHOST = [elb hostname]`
+
+`HAPROXY_GROUP = external`
 
 You can get the ELB hostname from the CCM “Public Server” link.  Once Zeppelin restarts, this should allow you to use that link to reach the Zeppelin GUI in “connected” mode.
 
