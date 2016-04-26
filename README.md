@@ -15,15 +15,11 @@ You'll need a DCOS cluster with one public node and at least five private nodes,
 
 Install package CLIs:
 
-```base
+```
+$ dcos package install marathon-lb
 $ dcos package install cassandra --cli
 $ dcos package install kafka --cli
 ```
-
-Look up the public agent IP in AWS. You need the IP of the EC2 host, not the ELB. Use this to replace `<agent_public_ip>` further down.
-
-Look up the public master IP in AWS. You need the IP of the EC2 host, not the ELB. Use this to replace `<master_public_ip>` further down.
-
 
 ## Demo steps
 
@@ -39,7 +35,7 @@ Wait until the Kafka and Cassandra services are healthly.
 
 Lookup the connection setting for Kafka:
     
-```base
+```
 $ dcos kafka connection
 ```
     
@@ -62,23 +58,27 @@ The output should look similar:
 
 ## Edit the Tweeter Service Config
 
-Edit the `KAFKA_BROKERS` environment variable in `tweeter.json` to match your environment. For example:
+Edit the `HAPROXY_0_VHOST` label in `tweeter.json` to match your public ELB hostname. For example:
 
-```bash
-"KAFKA_BROKERS": "broker-0.kafka.mesos:9557"
+```json
+{
+  "labels": {
+    "HAPROXY_0_VHOST": "brenden-7-publicsl-1dnroe89snjkq-221614774.us-west-2.elb.amazonaws.com"
+  }
+}
 ```
 
 ## Run the Tweeter Service
 
 Launch three instances of Tweeter on Marathon using the config file in this repo:
 
-```bash
+```
 $ dcos marathon app add tweeter.json
 ```
 
 The service talks to Cassandra via `node-0.cassandra.mesos:9042`, and Kafka via `broker-0.kafka.mesos:9557` in this example.
 
-Traffic is routed to the service via marathon-lb. Navigate to `http://<agent_public_ip>:10000` to see the Tweeter UI and post a Tweet.
+Traffic is routed to the service via marathon-lb. Navigate to `http://<public_elb>` to see the Tweeter UI and post a Tweet.
 
 
 ## Post a lot of Tweets
