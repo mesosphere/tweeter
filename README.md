@@ -29,31 +29,13 @@ Install packages for DCOS UI:
 * zeppelin
 * marathon-lb
 
-Wait until the Kafka and Cassandra services are healthly.
+Wait until the Kafka and Cassandra services are healthly. You can check their status with:
 
-## Lookup Kafka broker addresses
-
-Lookup the connection setting for Kafka:
-    
 ```
 $ dcos kafka connection
-```
-    
-The output should look similar:
-```json
-{
-    "address": [
-        "10.0.3.62:9557",
-        "10.0.3.59:9757",
-        "10.0.3.58:9504"
-    ],
-    "dns": [
-        "broker-0.kafka.mesos:9557",
-        "broker-1.kafka.mesos:9757",
-        "broker-2.kafka.mesos:9504"
-    ],
-    "zookeeper": "master.mesos:2181/kafka"
-}
+...
+$ dcos cassandra connection
+...
 ```
 
 ## Edit the Tweeter Service Config
@@ -100,12 +82,12 @@ This will post more than 100k tweets one by one, so you'll see them coming in st
 
 Next, we'll do real-time analytics on the stream of tweets coming in from Kafka.
 
-Navigate to Zeppelin at `http://<master_public_ip>/service/zeppelin/`, click `Import note` and import `tweeter-analytics.json`. Zeppelin is preconfigured to execute Spark jobs on the DCOS cluster, so there is no further configuration or setup required.
+Navigate to Zeppelin at `https://<master_public_ip>/service/zeppelin/`, click `Import note` and import `tweeter-analytics.json`. Zeppelin is preconfigured to execute Spark jobs on the DCOS cluster, so there is no further configuration or setup required.
 
 Run the *Load Dependencies* step to load the required libraries into Zeppelin. Next, run the *Spark Streaming* step, which reads the tweet stream from Zookeeper, and puts them into a temporary table that can be queried using SparkSQL. Next, run the *Top Tweeters* SQL query, which counts the number of tweets per user, using the table created in the previous step. The table updates continuously as new tweets come in, so re-running the query will produce a different result every time.
 
 
-NOTE: if /service/zeppelin is showing as Disconnected (and hence can’t load the notebook), you can instead redirect Zeppelin out the ELB using Marathon-LB. To do this, add the following labels to the zeppelin service and restart:
+NOTE: if /service/zeppelin is showing as Disconnected (and hence can’t load the notebook), make sure you're using HTTPS instead of HTTP, until [this PR](https://github.com/dcos/dcos/pull/27) gets merged. Alternatively, you can use marathon-lb. To do this, add the following labels to the Zeppelin service and restart:
 
 
 `HAPROXY_0_VHOST = [elb hostname]`
