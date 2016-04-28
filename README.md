@@ -16,7 +16,6 @@ You'll need a DCOS cluster with one public node and at least five private nodes,
 Install package CLIs:
 
 ```
-$ dcos package install marathon-lb
 $ dcos package install cassandra --cli
 $ dcos package install kafka --cli
 ```
