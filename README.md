@@ -67,7 +67,7 @@ Traffic is routed to the service via marathon-lb. Navigate to `http://<public_el
 Connect to the master node with the command:
 
 ```
-dcos node ssh —master-proxy -leader
+dcos node ssh --master-proxy --leader
 ```
 
 Post a lot of Shakespeare tweets from a file:
