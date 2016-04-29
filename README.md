@@ -70,7 +70,7 @@ Post a lot of Shakespeare tweets from a file:
 dcos marathon app add post-tweets.json
 ```
 
-This will post more than 100k tweets one by one, so you'll see them coming in steadily when you refresh the page.
+This will post more than 100k tweets one by one, so you'll see them coming in steadily when you refresh the page. Take a look at the Networking page on the UI to see the load balancing in action.
 
 
 ## Streaming Analytics
