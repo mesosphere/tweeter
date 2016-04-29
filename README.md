@@ -39,7 +39,7 @@ $ dcos cassandra connection
 
 ## Edit the Tweeter Service Config
 
-Edit the `HAPROXY_0_VHOST` label in `tweeter.json` to match your public ELB hostname. For example:
+Edit the `HAPROXY_0_VHOST` label in `tweeter.json` to match your public ELB hostname. Be sure to remove the leading `http://` and the trailing `/` For example:
 
 ```json
 {
