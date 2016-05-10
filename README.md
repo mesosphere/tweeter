@@ -64,23 +64,13 @@ Traffic is routed to the service via marathon-lb. Navigate to `http://<public_el
 
 ## Post a lot of Tweets
 
-Connect to the master node with the command:
-
-```
-dcos node ssh --master-proxy --leader
-```
-
 Post a lot of Shakespeare tweets from a file:
 
-```
-$ docker run --entrypoint=/bin/bash -it mesosphere/tweeter
-root@162d2f2270da:/usr/src/app# bin/tweet shakespeare-tweets.json http://marathon-lb.marathon.mesos:10000
-{"handle":"","content":"ACT I"}
-{"handle":"","content":"SCENE I. London. The palace."}
-{"handle":"","content":"Enter KING HENRY, LORD JOHN OF LANCASTER, the EARL of WESTMORELAND, SIR WALTER BLUNT, and others"}
+``` 
+dcos marathon app add post-tweets.json
 ```
 
-This will post more than 100k tweets one by one, so you'll see them coming in steadily when you refresh the page.
+This will post more than 100k tweets one by one, so you'll see them coming in steadily when you refresh the page. Take a look at the Networking page on the UI to see the load balancing in action.
 
 
 ## Streaming Analytics
