@@ -20,18 +20,18 @@ bash ./install.sh . http://$master_ip <<< 'no'
 ./bin/dcos auth login
 ./bin/dcos package install marathon-lb <<< 'yes'
 ./bin/dcos package install cassandra
+./bin/dcos package install kafka
 
-sleep 20
+sleep 10
 while ! ./bin/dcos cassandra connection 2>/dev/null | grep -q "node-2" ; do
     echo $'\nWaiting for Cassandra connection.\n'
-    sleep 20
+    sleep 15
 done
 echo $'\nCassandra is up.\n'
 
-./bin/dcos package install kafka
 while ! ./bin/dcos kafka connection | grep -q "broker-2" ; do
     echo $'\nWaiting for Kafka connection.\n'
-    sleep 20
+    sleep 15
 done
 echo $'\nKafka is up.\n'
 
