@@ -45,7 +45,7 @@
     }
   ],
   "labels": {
-    "HAPROXY_0_VHOST": "ian-3we0u-publicsl-zvt5scxlwzcg-90819965.us-west-2.elb.amazonaws.com",
+    "HAPROXY_0_VHOST": "PUBLIC_SLAVE_ELB",
     "HAPROXY_GROUP": "external",
     "VIP_0": "1.1.1.1:30000"
   },
