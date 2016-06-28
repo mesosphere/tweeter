@@ -1,7 +1,14 @@
 #!/bin/bash
 
-master_ip=$1
-public_slave_elb=$2
+#strip http(s) from Master IP url
+mip_clean=${1#*//}
+#strip trailing slash from Master IP url
+master_ip=${mip_clean%/}
+
+# strip http(s) from ELB url
+elb_clean=${2#*//}
+# strip trailing slash from ELB url
+public_slave_elb=${elb_clean%/}
 
 curl -s $master_ip | grep DC/OS > /dev/null
 
