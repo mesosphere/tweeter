@@ -20,10 +20,19 @@ else
   exit
 fi
 
+# Update Python Environment
+echo "Enter your Mac's password to update your Python environment"
+sudo pip install --upgrade pip virtualenv wheel setuptools
+
+# Install new DC/OS CLI 
+
+bash -c '[ -d dcos ] && rm -rf dcos'
+
 mkdir -p dcos && cd dcos && 
 curl -s -O https://downloads.mesosphere.com/dcos-cli/install.sh 
 bash ./install.sh . http://$master_ip <<< 'no'
 
+echo "Enter the username and password for your DC/OS cluster. Default is bootstrapuser/deleteme"
 ./bin/dcos auth login
 ./bin/dcos package install marathon-lb <<< 'yes'
 ./bin/dcos package install cassandra
