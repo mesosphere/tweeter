@@ -28,10 +28,10 @@ The above command will do the following:
 See "EBC Demo - Tweeter" doc on Google drive for more details and a demonstration video, but the technical steps are as follows:
 
 * Install Zeppelin from the GUI using the default values
-* Log into the Tweeter UI at http://[elb_hostname] and post a sample tweet
+* Log into the Tweeter UI at `http://[elb_hostname]` and post a sample tweet
 * Start the tweeter load job from the CLI using the command `dcos/bin/dcos marathon app add post-tweets.json`
 * Kill one of the Tweeter containers in Marathon and show that the Tweeter is still up and tweets are still flowing in
-* Log into Zeppelin using the https interface at https://[master_ip]/service/zeppelin
+* Log into Zeppelin using the https interface at `https://[master_ip]/service/zeppelin`
 * Click `Import note` and import `tweeter-analytics.json` from the Tweeter repo clone you made locally
 * Open the newly loaded "Tweeter Analytics" Notebook
 * Run the *Load Dependencies* step to load the required libraries into Zeppelin
