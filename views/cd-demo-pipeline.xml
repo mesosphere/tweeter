@@ -1,0 +1,21 @@
+<au.com.centrumsystems.hudson.plugin.buildpipeline.BuildPipelineView plugin="build-pipeline-plugin@1.4.9">
+      <owner class="hudson" reference="../../.."/>
+      <name>cd-demo-pipeline</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+      <gridBuilder class="au.com.centrumsystems.hudson.plugin.buildpipeline.DownstreamProjectGridBuilder">
+          <firstJob>build-cd-demo</firstJob>
+    </gridBuilder>
+    <noOfDisplayedBuilds>1</noOfDisplayedBuilds>
+    <buildViewTitle></buildViewTitle>
+    <consoleOutputLinkStyle>Lightbox</consoleOutputLinkStyle>
+    <cssUrl></cssUrl>
+    <triggerOnlyLatestJob>false</triggerOnlyLatestJob>
+    <alwaysAllowManualTrigger>false</alwaysAllowManualTrigger>
+    <showPipelineParameters>false</showPipelineParameters>
+    <showPipelineParametersInHeaders>false</showPipelineParametersInHeaders>
+    <startsWithParameters>false</startsWithParameters>
+    <refreshFrequency>3</refreshFrequency>
+    <showPipelineDefinitionHeader>false</showPipelineDefinitionHeader>
+</au.com.centrumsystems.hudson.plugin.buildpipeline.BuildPipelineView>
