@@ -1,13 +1,12 @@
 {
   "id": "/tweeter",
-  "cmd": "export KAFKA_BROKERS=`curl -s master.mesos:8123/v1/services/_broker-0._tcp.kafka.mesos | python -c 'import sys, json; j = json.load(sys.stdin); print(j[0][\"ip\"] + \":\" + j[0][\"port\"])'` && until rake cassandra:setup; do sleep 5; done && rails server",
+  "cmd": "export KAFKA_BROKERS='broker.kafka.l4lb.thisdcos.directory:9092' && until rake cassandra:setup; do sleep 5; done && rails server",
   "cpus": 0.25,
   "mem": 256,
   "disk": 0,
-  "instances": 3,
+  "instances": 1,
   "container": {
     "type": "DOCKER",
-    "volumes": [],
     "docker": {
       "image": "mesosphere/tweeter",
       "network": "BRIDGE",
@@ -16,15 +15,11 @@
           "containerPort": 3000,
           "hostPort": 0,
           "servicePort": 10000,
-          "protocol": "tcp",
           "labels": {
             "VIP_0": "1.1.1.1:30000"
           }
         }
-      ],
-      "privileged": false,
-      "parameters": [],
-      "forcePullImage": false
+      ]
     }
   },
   "env": {
@@ -36,23 +31,10 @@
     {
       "path": "/",
       "protocol": "HTTP",
-      "portIndex": 0,
-      "gracePeriodSeconds": 300,
-      "intervalSeconds": 5,
-      "timeoutSeconds": 2,
-      "maxConsecutiveFailures": 2,
-      "ignoreHttp1xx": false
+      "portIndex": 0
     }
   ],
   "labels": {
-    "HAPROXY_0_VHOST": "ian-3we0u-publicsl-zvt5scxlwzcg-90819965.us-west-2.elb.amazonaws.com",
     "HAPROXY_GROUP": "external"
-  },
-  "portDefinitions": [
-    {
-      "port": 10000,
-      "protocol": "tcp",
-      "labels": {}
-    }
-  ]
+  }
 }
