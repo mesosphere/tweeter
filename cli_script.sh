@@ -1,11 +1,29 @@
 #!/bin/bash
+# Script for setting up the Tweeter demo in DC/OS
+#
+# Usage: DCOS_URL=http://<IP-address> DCOS_EE=[true/false] bash cli_script.sh
+#
+# Requirements:
+#   - DC/OS cluster with 1 public slave and 5 private slaves with
+#       or without superuser set
+#   - DCOS CLI installed on localhost
+#   - DCOS_EE set to true or false
+#   - DCOS_URL set to DCOS master URL
+#
+# If no user credentials are supplied, the following will be used:
+#   Enterprise:
+#     - AWS default bootstrapuser/deleteme
+#     - Override with DCOS_USER & DCOS_PW
+#   OSS:
+#     - The token hard-coded below for mesosphere.user@gmail.com
+#         password: unicornsarereal
+#     - Override with DCOS_AUTH_TOKEN
 set -o errexit
 
-ci_oauth_token='eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik9UQkVOakZFTWtWQ09VRTRPRVpGTlRNMFJrWXlRa015Tnprd1JrSkVRemRCTWpBM1FqYzVOZyJ9.eyJlbWFpbCI6ImFsYmVydEBiZWtzdGlsLm5ldCIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczovL2Rjb3MuYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTA5OTY0NDk5MDExMTA4OTA1MDUwIiwiYXVkIjoiM3lGNVRPU3pkbEk0NVExeHNweHplb0dCZTlmTnhtOW0iLCJleHAiOjIwOTA4ODQ5NzQsImlhdCI6MTQ2MDE2NDk3NH0.OxcoJJp06L1z2_41_p65FriEGkPzwFB_0pA9ULCvwvzJ8pJXw9hLbmsx-23aY2f-ydwJ7LSibL9i5NbQSR2riJWTcW4N7tLLCCMeFXKEK4hErN2hyxz71Fl765EjQSO5KD1A-HsOPr3ZZPoGTBjE0-EFtmXkSlHb1T2zd0Z8T5Z2-q96WkFoT6PiEdbrDA-e47LKtRmqsddnPZnp0xmMQdTr2MjpVgvqG7TlRvxDcYc-62rkwQXDNSWsW61FcKfQ-TRIZSf2GS9F9esDF4b5tRtrXcBNaorYa9ql0XAWH5W_ct4ylRNl3vwkYKWa4cmPvOqT5Wlj9Tf0af4lNO40PQ'
-AUTH_TOKEN={$DCOS_AUTH_TOKEN:=$ci_auth_token}
-DCOS_USER={$DCOS_USER:=bootstrapuser}
-DCOS_PW={$DCOS_PW:=deleteme}
-DCOS_EE=false
+ci_auth_token='eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik9UQkVOakZFTWtWQ09VRTRPRVpGTlRNMFJrWXlRa015Tnprd1JrSkVRemRCTWpBM1FqYzVOZyJ9.eyJlbWFpbCI6Im1lc29zcGhlcmUudXNlckBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6Ly9kY29zLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDEwMzI4NjMzNTExMTExNTM2NTg4MyIsImF1ZCI6IjN5RjVUT1N6ZGxJNDVRMXhzcHh6ZW9HQmU5Zk54bTltIiwiZXhwIjoxNDcxNDY3ODI0LCJpYXQiOjE0NzEwMzU4MjR9.imfN3JDF-XpX_PT9YOgle8bHTBdPOZJ-G4AxvUennppOkcwe8XzTcU-s6bmo47eHPSCqBGHb1rH8m8kIRkrOQtOraISqqlkf5fV8LYSHirX6fSSluUhKPEmyPueipSFCvNxF3OerG6PCvM-VC_pSINIKgZi_o6sDN06r3AfcDjnU1XutrHcjfP-Jvv3p7l550NtMjsXq4hIciu-tf8Nbsh8lz6dHimIbzf-_g6l3UJSxRt-ota0H7myRtSLaP72YB7R369D0xqKxDQYKmkV0LJtNw_AsIsMvBISWH3X7LKfd1O0qSAioP3JODjVlgO916MnHG-wZW788nIPcGxfEGA'
+DCOS_AUTH_TOKEN=${DCOS_AUTH_TOKEN:=$ci_auth_token}
+DCOS_USER=${DCOS_USER:='bootstrapuser'}
+DCOS_PW=${DCOS_PW:='deleteme'}
 
 is_running() {
     status=`dcos marathon app list | grep $1 | awk '{print $6}'`
@@ -43,15 +61,16 @@ expect "token:"
 send "$DCOS_AUTH_TOKEN\n"
 expect eof
 EOF
-
 }
 
 # Check DC/OS CLI is actually installed
 dcos --help &> /dev/null || ( echo 'DC/OS must be installed!' && exit 1 )
 
 # Setup access to the desired DCOS cluster and install marathon lb
-dcos config set core.dcos_url $DCOS_URL
-if $DCOS_EE; then
+dcos config set core.dcos_url "${DCOS_URL:?Error: DCOS_URL must be set!}"
+if ${DCOS_EE:?'Error: DCOS_EE must be set to true or false'}; then
+    echo Starting DC/OS Enterprise Demo
+    echo Override default credentials with DCOS_USER and DCOS_PW
     ee_login
     cat <<EOF > get_sa.json
 {
@@ -65,26 +84,43 @@ if $DCOS_EE; then
 EOF
     dcos marathon app add get_sa.json
     wait_for_deployment saread
-    sa_token=`dcos task log --lines=1 saread`
+    # This string will be used as a JSON value, so escape "
+    sa_token=`dcos task log --lines=1 saread | sed 's/"/\\\\"/g'`
     dcos marathon app remove saread
-    # need to set up marathon LB... how to get service account?
-else
-    oss_login
-    cat <<EOF | expect -
-spawn dcos package install marathon-lb
-expect {
-    "\[yes\/no\]" {
-        send "yes\n"
-        expect eof
-    }
-    eof
+    # Get auth headers to do calls outside of dcos CLI (secrets)
+    cat <<EOF > login.json
+{
+  "uid": "$DCOS_USER",
+  "password": "$DCOS_PW"
 }
 EOF
-   #dcos package install marathon-lb
+    auth_r=`curl -kfSslv -H 'content-type: application/json' -X POST -d @login.json $DCOS_URL/acs/api/v1/auth/login`
+    echo $auth_r
+    auth_t=`echo $auth_r | awk '{print $3}' | tr -d '"'`
+    auth_h="Authorization: token=$auth_t"
+    cat <<EOF > marathon-lb-secret.json
+{
+  "value": "$sa_token"
+}
+EOF
+    curl -kfSslv -X PUT -H "$auth_h" -d @marathon-lb-secret.json $DCOS_URL/secrets/v1/secret/default/marathon-lb
+    cat <<EOF > options.json
+{
+  "marathon-lb": {
+    "secret_name": "marathon-lb"
+  }
+}
+EOF
+    dcos package install --yes --options=options.json marathon-lb
+else
+    echo Starting DC/OS OSS Demo
+    echo Override default credentials with DCOS_AUTH_TOKEN
+    oss_login
+    dcos package install --yes marathon-lb
 fi
-dcos package install cassandra
-dcos package install kafka
-dcos package install zeppelin
+dcos package install --yes cassandra
+dcos package install --yes kafka
+dcos package install --yes zeppelin
 
 # query until services are listed as running
 wait_for_deployment marathon-lb cassandra kafka zeppelin
