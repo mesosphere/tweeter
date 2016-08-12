@@ -7,7 +7,6 @@
   "instances": 1,
   "container": {
     "type": "DOCKER",
-    "volumes": [],
     "docker": {
       "image": "mesosphere/tweeter",
       "network": "BRIDGE",
@@ -16,20 +15,9 @@
           "containerPort": 3000,
           "hostPort": 0,
           "servicePort": 10101,
-          "protocol": "tcp",
-          "labels": {}
+          "protocol": "tcp"
         }
-      ],
-      "privileged": false,
-      "parameters": [],
-      "forcePullImage": false
+      ]
     }
-  },
-  "portDefinitions": [
-    {
-      "port": 10101,
-      "protocol": "tcp",
-      "labels": {}
-    }
-  ]
+  }
 }
