@@ -4,7 +4,7 @@
   "cpus": 0.25,
   "mem": 256,
   "disk": 0,
-  "instances": 1,
+  "instances": 3,
   "container": {
     "type": "DOCKER",
     "docker": {
@@ -35,7 +35,6 @@
     }
   ],
   "labels": {
-<<<<<<< HEAD
     "HAPROXY_0_VHOST": "PUBLIC_SLAVE_ELB",
     "HAPROXY_GROUP": "external",
     "VIP_0": "1.1.1.1:30000"
@@ -47,8 +46,4 @@
       "labels": {}
     }
   ]
-=======
-    "HAPROXY_GROUP": "external"
-  }
->>>>>>> master
 }
