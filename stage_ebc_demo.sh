@@ -89,6 +89,7 @@ EOF
 dcos --help &> /dev/null || ( echo 'DC/OS must be installed!' && exit 1 )
 
 # Setup access to the desired DCOS cluster and install marathon lb
+dcos config set core.ssl_verify false
 dcos config set core.dcos_url "${DCOS_URL:?Error: DCOS_URL must be set!}"
 if ${DCOS_EE:?'Error: DCOS_EE must be set to true or false'}; then
 echo Starting DC/OS Enterprise Demo
