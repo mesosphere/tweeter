@@ -8,7 +8,7 @@ gem 'sass-rails', '~> 4.0.3'
 gem 'uglifier', '>= 1.3.0'
 
 # Use Cassandra Driver as primary storage
-gem 'cassandra-driver', '~> 2.1'
+gem 'cassandra-driver', '~> 3.0'
 
 # Kafka for logging tweets
 gem 'ruby-kafka', '~> 0.2.0'
