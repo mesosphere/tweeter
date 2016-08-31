@@ -137,7 +137,7 @@ cat <<EOF > options.json
 }
 EOF
 
-dcos package install --yes --options=options.json marathon-lb
+dcos package install --yes --options=options.json marathon-lb --package-version="1.3.3"
 else
 echo Starting DC/OS Demo Install
 echo Override default credentials with DCOS_AUTH_TOKEN
