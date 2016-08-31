@@ -186,4 +186,4 @@ echo "http://$DCOS_PUB_ELB"
 echo $'\nYou can now run the following to post tweets:\n'
 echo "dcos marathon app add post-tweets.json"
 echo $'\nAfter installing Zeppelin connect with:\n'
-echo "https://$master_ip/service/zeppelin"
+echo "https://$mip_clean/service/zeppelin"
