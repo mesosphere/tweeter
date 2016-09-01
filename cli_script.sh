@@ -223,7 +223,7 @@ EOF
 fi
 
 for pkg in marathon-lb cassandra kafka zeppelin; do
-    cmd="dcos package install --yes"
+    cmd="dcos --log-level=ERROR package install --yes"
     if [[ $pkg = 'marathon-lb' ]] && ! $DCOS_OSS; then
         cmd="$cmd --options=options.json"
     fi
