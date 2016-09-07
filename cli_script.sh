@@ -210,10 +210,8 @@ EOF
   "value": "$sa_token"
 }
 EOF
-    log_msg "Checking secret store status..."
-    secret_post="curl -kfSslv -X GET -H '$auth_h' $DCOS_URL/secrets/v1/store/default"
     log_msg "Posting marathon-lb service account JSON to secret store..."
-    secret_post="curl -kfSslv -X PUT -H '$auth_h' -d @marathon-lb-secret.json $DCOS_URL/secrets/v1/store/default/marathon-lb"
+    secret_post="curl -kfSslv -X PUT -H 'Content-Type: application/json' -H '$auth_h' -d @marathon-lb-secret.json $DCOS_URL/secrets/v1/secret/default/marathon-lb"
     demo_eval "$secret_post"
     cat <<EOF > options.json
 {
