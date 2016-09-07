@@ -45,7 +45,7 @@
     }
   ],
   "labels": {
-    "HAPROXY_0_VHOST": "skumaran-publicsl-1zyomyduuwrk-1472404519.us-west-2.elb.amazonaws.com",
+    "HAPROXY_0_VHOST": "skumaran-publicsl-1mm99atg41vdx-808487238.us-west-2.elb.amazonaws.com",
     "HAPROXY_GROUP": "external"
   },
   "portDefinitions": [
