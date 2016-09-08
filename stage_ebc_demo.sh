@@ -137,12 +137,12 @@ cat <<EOF > options.json
 }
 EOF
 
-dcos package install --yes --options=options.json marathon-lb --package-version="1.3.3"
+dcos package install --yes --options=options.json marathon-lb --package-version="1.3.5"
 else
 echo Starting DC/OS Demo Install
 echo Override default credentials with DCOS_AUTH_TOKEN
 oss_login
-dcos package install --yes marathon-lb --package-version="1.3.3"
+dcos package install --yes marathon-lb --package-version="1.3.5"
 fi
 dcos package install --yes cassandra --package-version="1.0.13-2.2.5"
 dcos package install --yes kafka --package-version="1.1.9-0.10.0.0"
