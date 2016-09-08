@@ -11,6 +11,36 @@ Capabilities:
 
 ## Install and Configure Prerequisites on the Cluster
 
+Install the Azure tools but be sure to use a version <= 1.10
+
+```
+sudo npm install -g azure-cli@0.10.0
+
+azure --version
+0.10.0 (node: 4.2.4)
+- or -
+0.10.0 (node: 5.10.1)
+```
+
+*Note: The version of node (4.x/5.x) doesn't appear to affect the behavior of the Azure CLI
+
+```
+azure config mode arm
+```
+
+```
+
+Setup the Azure Cluster using the repo ARM template for 1.7.x
+
+```
+azure group delete <name>-demo
+
+azure group create <name>-demo westus
+
+azure group deployment create --template-file ee.tweeter.azuredeploy.json <name>-demo
+```
+
+
 You'll need a DCOS cluster with one public node and at least five private nodes, DCOS CLI, and DCOS package CLIs.
 
 Install package CLIs:
