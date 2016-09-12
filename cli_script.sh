@@ -174,45 +174,24 @@ else
     log_msg "Starting DC/OS Enterprise Demo"
     log_msg "Override default credentials with --user and --pw"
     demo_eval ee_login
-    cat <<EOF > get_sa.json
-{
-  "id": "/saread",
-  "cmd": "cat /run/dcos/etc/mesos/agent_service_account.json\nsleep 36000",
-  "instances": 1,
-  "cpus": 0.1,
-  "mem": 32,
-  "user": "root"
-}
-EOF
-    log_msg "Retrieving service account JSON..."
-    demo_eval "dcos marathon app add get_sa.json"
-    wait_for_deployment saread
-    # This string will be used as a JSON value, so escape "
-    sa_token=`dcos task log --lines=1 saread | sed 's/"/\\\\"/g'`
-    log_msg "Service account JSON: $sa_token"
-    demo_eval "dcos marathon app remove saread"
-    log_msg "Service account JSON collection complete"
-    cat <<EOF > login.json
-{
-  "uid": "$DCOS_USER",
-  "password": "$DCOS_PW"
-}
-EOF
-    log_msg "Get auth headers to do calls outside of DC/OS CLI (secrets)"
-    auth_cmd="curl -kfSslv -H 'content-type: application/json' -X POST -d @login.json $DCOS_URL/acs/api/v1/auth/login"
-    log_msg "Logging in with: $auth_cmd"
-    auth_r=`eval $auth_cmd`
-    auth_t=`echo $auth_r | awk '{print $3}' | tr -d '"'`
+    # Get the dcos EE CLI
+    demo_eval 'dcos package install --cli --yes dcos-enterprise-cli'
+    demo_eval 'dcos security org service-accounts keypair -l 4096 k.priv k.pub'
+    demo_eval 'dcos security org service-accounts create -p k.pub -d "Marathon LB" dcos_marathon_lb'
+    demo_eval 'dcos security secrets create-sa-secret k.priv dcos_marathon_lb marathon-lb'
+    log_msg "Get auth headers to do calls outside of DC/OS CLI (ACLs)"
+    auth_t=`dcos config show core.dcos_acs_token`
     log_msg "Received auth token: $auth_t"
     auth_h="Authorization: token=$auth_t"
-    cat <<EOF > marathon-lb-secret.json
-{
-  "value": "$sa_token"
-}
-EOF
-    log_msg "Posting marathon-lb service account JSON to secret store..."
-    secret_post="curl -kfSslv -X PUT -H 'Content-Type: application/json' -H '$auth_h' -d @marathon-lb-secret.json $DCOS_URL/secrets/v1/secret/default/marathon-lb"
-    demo_eval "$secret_post"
+
+    # Make our ACLs
+    demo_eval "curl -skSL -X PUT -H 'Content-Type: application/json' -d '{\"description\":\"Marathon admin events\"}' -H \"$auth_h\" $DCOS_URL/acs/api/v1/acls/dcos:service:marathon:marathon:admin:events"
+    demo_eval "curl -skSL -X PUT -H 'Content-Type: application/json' -d '{\"description\":\"Marathon all services\"}' -H \"$auth_h\" $DCOS_URL/acs/api/v1/acls/dcos:service:marathon:marathon:services:*"
+    # Add our dcos_marathon_lb service account to the ACLs
+    demo_eval "curl -skSL -X PUT -H \"$auth_h\" $DCOS_URL/acs/api/v1/acls/dcos:service:marathon:marathon:admin:events/users/dcos_marathon_lb/read"
+    demo_eval "curl -skSL -X PUT -H \"$auth_h\" $DCOS_URL/acs/api/v1/acls/dcos:service:marathon:marathon:services:*/users/dcos_marathon_lb/read"
+
+
     cat <<EOF > options.json
 {
   "marathon-lb": {
