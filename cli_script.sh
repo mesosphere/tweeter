@@ -219,17 +219,9 @@ done
 # query until services are listed as running
 wait_for_deployment marathon-lb cassandra kafka zeppelin
 
-if $INFRA_ONLY; then
-    log_msg "Infrastructure setup complete! Exiting setup..."
-    exit 0
-fi
-
 # once running, deploy tweeter app and then post to it
 demo_eval "dcos marathon app add tweeter.json"
 wait_for_deployment tweeter
-
-demo_eval "dcos marathon app add post-tweets.json"
-wait_for_deployment post-tweets
 
 # get the public IP of the public node if unset
 cat <<EOF > public-ip.json
@@ -248,6 +240,21 @@ demo_eval "dcos marathon app add public-ip.json"
 wait_for_deployment public-ip
 public_ip=`dcos task log --lines=1 public-ip`
 demo_eval "dcos marathon app remove public-ip"
+
+log_msg "Tweeter home page can be found at: http://$public_ip:10000/"
+log_msg "Zeppelin can be found at: $DCOS_URL/service/zeppelin"
+
+if $INFRA_ONLY; then
+    log_msg "To post to tweeter, do: dcos marathon app add post-tweets.json"
+    log_msg "Infrastructure setup complete! Exiting setup..."
+    exit 0
+fi
+
+demo_eval "dcos marathon app add post-tweets.json"
+wait_for_deployment post-tweets
+
+# short sleep to make sure tweets are posted
+sleep 3
 
 # Now that tweets have been posted and the site is up, make sure it all works:
 log_msg "Pulling Tweets from $public_ip:10000"
