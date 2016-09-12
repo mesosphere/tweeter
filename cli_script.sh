@@ -3,7 +3,7 @@ set -o errexit
 # Set stable package versions here
 CASSANDRA_STABLE=${CASSANDRA_STABLE:='1.0.12-2.2.5'}
 KAFKA_STABLE=${KAFKA_STABLE:='1.1.9-0.10.0.0'}
-MARATHON_LB_STABLE=${MARATHON_LB_STABLE:='1.3.3'}
+MARATHON_LB_STABLE=${MARATHON_LB_STABLE:='1.3.5'}
 ZEPPELIN_STABLE=${ZEPPELIN_STABLE:='0.6.0'}
 
 USAGE="$(basename "$0") [-h|--help] [--step --manual --stable --infra]
@@ -186,11 +186,10 @@ else
 
     # Make our ACLs
     demo_eval "curl -skSL -X PUT -H 'Content-Type: application/json' -d '{\"description\":\"Marathon admin events\"}' -H \"$auth_h\" $DCOS_URL/acs/api/v1/acls/dcos:service:marathon:marathon:admin:events"
-    demo_eval "curl -skSL -X PUT -H 'Content-Type: application/json' -d '{\"description\":\"Marathon all services\"}' -H \"$auth_h\" $DCOS_URL/acs/api/v1/acls/dcos:service:marathon:marathon:services:*"
+    demo_eval "curl -skSL -X PUT -H 'Content-Type: application/json' -d '{\"description\":\"Marathon all services\"}' -H \"$auth_h\" $DCOS_URL/acs/api/v1/acls/dcos:service:marathon:marathon:services:%252F"
     # Add our dcos_marathon_lb service account to the ACLs
     demo_eval "curl -skSL -X PUT -H \"$auth_h\" $DCOS_URL/acs/api/v1/acls/dcos:service:marathon:marathon:admin:events/users/dcos_marathon_lb/read"
-    demo_eval "curl -skSL -X PUT -H \"$auth_h\" $DCOS_URL/acs/api/v1/acls/dcos:service:marathon:marathon:services:*/users/dcos_marathon_lb/read"
-
+    demo_eval "curl -skSL -X PUT -H \"$auth_h\" $DCOS_URL/acs/api/v1/acls/dcos:service:marathon:marathon:services:%252F/users/dcos_marathon_lb/read"
 
     cat <<EOF > options.json
 {
