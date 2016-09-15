@@ -42,9 +42,3 @@ echo $DCOS_PUB_ELB
 #Run CI Script in infrastructure mode
 bash cli_script.sh --url $DCOS_URL --infra
 
-echo $'\nYou can now connect to Tweeter at:\n'
-echo "http://$DCOS_PUB_ELB"
-echo $'\nYou can now run the following to post tweets:\n'
-echo "dcos marathon app add post-tweets.json"
-echo $'\nAfter installing Zeppelin connect with:\n'
-echo "https://$mip_clean/service/zeppelin"
