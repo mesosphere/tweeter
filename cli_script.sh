@@ -134,7 +134,7 @@ log_msg() {
 wait_for_deployment() {
     for service in $*; do
         until is_running $service; do
-            log_msg "Wait for $service to finsh deploying..."
+            log_msg "Wait for $service to finish deploying..."
             sleep 3
         done
     done
