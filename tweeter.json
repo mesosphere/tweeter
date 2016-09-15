@@ -35,15 +35,6 @@
     }
   ],
   "labels": {
-    "HAPROXY_0_VHOST": "PUBLIC_SLAVE_ELB",
-    "HAPROXY_GROUP": "external",
-    "VIP_0": "1.1.1.1:30000"
-  },
-  "portDefinitions": [
-    {
-      "port": 10000,
-      "protocol": "tcp",
-      "labels": {}
-    }
-  ]
+    "HAPROXY_GROUP": "external"
+  }
 }
