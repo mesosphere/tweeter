@@ -1,0 +1,8 @@
+{
+  "fixturesFolder":     "tests/fixtures",
+  "integrationFolder":  "tests/integration",
+  "screenshotsFolder":  "tests/screenshots",
+  "supportFolder":      "tests/support",
+  "screenshotOnHeadlessFailure": false,
+  "pageLoadTimeout":    120000
+}
