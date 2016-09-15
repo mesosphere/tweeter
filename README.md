@@ -8,6 +8,42 @@ Capabilities:
 * Streams tweets to Kafka as they come in
 * Real time tweet analytics with Spark and Zeppelin
 
+## Install Prerequisites on Your Machine
+
+To run the demo script (`cli_script.sh`), the following pieces of software are expected to be available:
+
+* dcos cli
+* cypress
+
+### Installing cypress
+
+Cypress is a nodejs package that executes UI tests. This is used by the demo script to submit a tweet and verify it is displayed within the Tweeter UI.
+
+To install on OSX, perform the following from within this project's directory:
+
+```
+$ brew update
+$ brew install node
+$ npm install -g cypress-cli
+$ cypress install
+```
+
+You can run the UI tests separately with `cypress run`.
+
+### Configuring cypress
+
+The demo script has a section that creates the JSON file `ci-conf.json`. This file is read by the cypress to determine the URL of the DC/OS cluster, the URL of the tweeter application, and the log in credentials to use. Without this file the UI tests will fail.
+
+Example:
+
+```
+{
+  "tweeter_url": "52.xx.xx.xx:10000",
+  "url": "http://my-cool-demo.us-west-2.elb.amazonaws.com/",
+  "username": "admin",
+  "password": "password"
+}
+```
 
 ## Demo Cluster Prerequisites
 
