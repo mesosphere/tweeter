@@ -93,7 +93,12 @@ You can get the ELB hostname from the CCM “Public Server” link.  Once Zeppel
 
 ## Automated Tweeter Demo Setup
 
-`cli_script.sh` in this repository can be utilized to setup a tweeter demo cluster automatically.
+`cli_script.sh` in this repository can be utilized to setup a tweeter demo
+cluster automatically.
+
+The steps below are applicable for Open DC/OS, when it does not have a super
+set. Instructions for Enterprise DC/OS will be similar can be obtained by
+consulting the `--help` option.
 
 1. Set `DCOS_URL` pointing to DCOS master.
 
