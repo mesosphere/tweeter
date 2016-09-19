@@ -97,7 +97,8 @@ DCOS_PW=${DCOS_PW:='deleteme'}
 demo_eval() {
     if $MANUAL_MODE; then
         printf "### Execute the following command: ###\n\n"
-        printf "$1\n\n"
+        # replace % in arg with %% to prevent printf interpretation
+        printf "${1//\%/\%\%}\n\n"
         printf "######################################\n"
     else
         log_msg "Executing: $1"
@@ -200,7 +201,13 @@ else
 EOF
 fi
 
-for pkg in marathon-lb cassandra kafka zeppelin; do
+if $INFRA_ONLY; then
+    install_packages=(marathon-lb cassandra kafka)
+else
+    install_packages=(marathon-lb cassandra kafka zeppelin)
+fi
+
+for pkg in ${install_packages[*]}; do
     cmd="dcos --log-level=ERROR package install --yes"
     if [[ $pkg = 'marathon-lb' ]] && ! $DCOS_OSS; then
         cmd="$cmd --options=options.json"
@@ -216,7 +223,7 @@ for pkg in marathon-lb cassandra kafka zeppelin; do
 done
 
 # query until services are listed as running
-wait_for_deployment marathon-lb cassandra kafka zeppelin
+wait_for_deployment ${install_packages[*]}
 
 # once running, deploy tweeter app and then post to it
 demo_eval "dcos marathon app add tweeter.json"
@@ -253,7 +260,7 @@ demo_eval "dcos marathon app add post-tweets.json"
 wait_for_deployment post-tweets
 
 # short sleep to make sure tweets are posted
-sleep 3
+sleep 15
 
 # Now that tweets have been posted and the site is up, make sure it all works:
 log_msg "Pulling Tweets from $public_ip:10000"
