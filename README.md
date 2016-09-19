@@ -91,7 +91,53 @@ NOTE: if /service/zeppelin is showing as Disconnected (and hence can’t load th
 
 You can get the ELB hostname from the CCM “Public Server” link.  Once Zeppelin restarts, this should allow you to use that link to reach the Zeppelin GUI in “connected” mode.
 
+## Automated Tweeter Demo Setup
 
+`cli_script.sh` in this repository can be utilized to setup a tweeter demo cluster automatically.
+
+1. Set `DCOS_URL` pointing to DCOS master.
+
+For e.g:
+
+```
+export DCOS_URL=http://54.70.182.15/
+```
+
+* Change the IP Address to your master ip of your cluste.r
+
+
+2. Login to dcos and copy the auth token
+
+```
+$ dcos auth login
+
+Please go to the following link in your browser:
+
+    http://54.70.182.15/login?redirect_uri=urn:ietf:wg:oauth:2.0:oob
+
+Enter authentication token:
+
+```
+
+3. Set DCOS Auth Token to the environment variable
+
+```
+export DCOS_AUTH_TOKEN=<TOKEN_FROM_PREVIOUS_STEP>
+```
+
+4. Run the cli script
+
+```
+$ ./cli_script.sh --oss
+```
+
+That's it.
+
+For more options, refer to.
+
+```
+$./cli_script.sh --help
+```
 
 ## Developing Tweeter
 
