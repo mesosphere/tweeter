@@ -200,44 +200,32 @@ else
 EOF
 fi
 
+# Set infrastructure packages to install
+
 if $INFRA_ONLY; then
-    for pkg in marathon-lb cassandra kafka; do
-        cmd="dcos --log-level=ERROR package install --yes"
-        if [[ $pkg = 'marathon-lb' ]] && ! $DCOS_OSS; then
-            cmd="$cmd --options=options.json"
-        fi
-        cmd="$cmd $pkg"
-        if $USE_STABLE; then
-            key="${pkg^^}_STABLE"
-            key="${key//-/_}" # replace - with _ for marathon-lb
-            eval ver='$'$key
-            cmd="$cmd --package-version=$ver"
-        fi
-        demo_eval "$cmd"
-    done
+    PACKAGES="marathon-lb cassandra kafka"
 else
-    for pkg in marathon-lb cassandra kafka zeppelin; do
-        cmd="dcos --log-level=ERROR package install --yes"
-        if [[ $pkg = 'marathon-lb' ]] && ! $DCOS_OSS; then
-            cmd="$cmd --options=options.json"
-        fi
-        cmd="$cmd $pkg"
-        if $USE_STABLE; then
-            key="${pkg^^}_STABLE"
-            key="${key//-/_}" # replace - with _ for marathon-lb
-            eval ver='$'$key
-            cmd="$cmd --package-version=$ver"
-        fi
-        demo_eval "$cmd"
-    done
+    PACKAGES="marathon-lb cassandra kafka zeppelin"
 fi
 
+for pkg in $PACKAGES; do
+    cmd="dcos --log-level=ERROR package install --yes"
+    if [[ $pkg = 'marathon-lb' ]] && ! $DCOS_OSS; then
+        cmd="$cmd --options=options.json"
+    fi
+    cmd="$cmd $pkg"
+    if $USE_STABLE; then
+        key="${pkg^^}_STABLE"
+        key="${key//-/_}" # replace - with _ for marathon-lb
+        eval ver='$'$key
+        cmd="$cmd --package-version=$ver"
+    fi
+    demo_eval "$cmd"
+done
+
+
 # query until services are listed as running
-if $INFRA_ONLY; then
-    wait_for_deployment marathon-lb cassandra kafka
-else
-    wait_for_deployment marathon-lb cassandra kafka zeppelin
-fi
+wait_for_deployment $PACKAGES
 
 # once running, deploy tweeter app and then post to it
 demo_eval "dcos marathon app add tweeter.json"
