@@ -1,6 +1,6 @@
 # Tweeter
 
-Tweeter is a sample service that demonstrates how easy it is to run a Twitter-like service on DCOS.
+Tweeter is a sample service that demonstrates how easy it is to run a Twitter-like service on DC/OS.
 
 Capabilities:
 
@@ -9,24 +9,78 @@ Capabilities:
 * Real time tweet analytics with Spark and Zeppelin
 
 
-## Install and Configure Prerequisites on the Cluster
+## Demo Cluster Prerequisites
 
-You'll need a DCOS cluster with one public node and at least five private nodes, DCOS CLI, and DCOS package CLIs.
+You'll need a DC/OS cluster with one public node and at least five private nodes and the DC/OS CLI locally installed.
 
-Install package CLIs:
+## Scripted Demo
+
+`cli_script.sh` in this repository can be utilized to setup a tweeter demo
+cluster automatically and provide some random traffic, however the GUI experience with Zeppelin analytics and DC/OS feature presentation must still be done by hand:
+* Install Zeppelin from the GUI using the default values
+* Log into the Tweeter UI at http://[elb_hostname] and post a sample tweet
+* Start the tweeter load job from the CLI using the command dcos/bin/dcos marathon app add post-tweets.json
+* Kill one of the Tweeter containers in Marathon and show that the Tweeter is still up and tweets are still flowing in
+* Log into Zeppelin using the https interface at https://[master_ip]/service/zeppelin
+* Click Import note and import tweeter-analytics.json from the Tweeter repo clone you made locally
+* Open the newly loaded "Tweeter Analytics" Notebook
+* Run the Load Dependencies step to load the required libraries into Zeppelin
+* Run the Spark Streaming step, which reads the tweet stream from Zookeeper, and puts them into a temporary table that can be queried using SparkSQL - this spins up the Zeppelin spark context so you can show them the increased utilization on the dashboard
+* Next, run the Top Tweeters SQL query, which counts the number of tweets per user, using the table created in the previous step
+* The table updates continuously as new tweets come in, so re-running the query will produce a different result every time
+
+
+### Stage EBC Demo
+Run Tweeter against an EE cluster, but do not start Zeppelin or post tweets
+```
+$ bash cli_script.sh --infra --url http://my.dcos.url
+```
+
+### Get Manual Demo script and Run Nothing
+This combination of options will not actually run the demo but stop and prompt you with the appropriate CLI command to do to run the demo. Note, by specifying -oss without a DCOS\_AUTH\_TOKEN set, the dummy CI auth token will be used
+```
+$ bash cli_script.sh --step --manual --oss --url http://my.dcos.url
+```
+
+### Open DC/OS Tweeter Demo Setup
+The steps below are applicable for Open DC/OS, when it does not have a super
+set. The auth token we set below
+
+#### Login to dcos and copy the auth token:
+```
+$ dcos auth login
+
+Please go to the following link in your browser:
+
+    http://54.70.182.15/login?redirect_uri=urn:ietf:wg:oauth:2.0:oob
+
+Enter authentication token:
 
 ```
+
+If you wish to access this token again later, use the cli command:
+```
+dcos config show core.dcos_acs_token
+```
+
+#### Set DCOS Auth Token to the environment variable
+
+```
+export DCOS_AUTH_TOKEN=<TOKEN_FROM_PREVIOUS_STEP>
+```
+#### Run the cli script
+```
+$ ./cli_script.sh --oss --url http://52.70.182.15
+```
+
+## Manual Test Steps
+### Install the cluster prereqs
+```
+$ dcos package install marathon-lb
 $ dcos package install cassandra --cli
 $ dcos package install kafka --cli
+$ dcos package install zeppelin
 ```
-
-## Demo steps
-
-Install packages for DCOS UI:
-* kafka
-* cassandra
-* zeppelin
-* marathon-lb
 
 Wait until the Kafka and Cassandra services are healthly. You can check their status with:
 
@@ -37,7 +91,7 @@ $ dcos cassandra connection
 ...
 ```
 
-## Edit the Tweeter Service Config
+### Edit the Tweeter Service Config
 
 Edit the `HAPROXY_0_VHOST` label in `tweeter.json` to match your public ELB hostname. Be sure to remove the leading `http://` and the trailing `/` For example:
 
@@ -49,7 +103,7 @@ Edit the `HAPROXY_0_VHOST` label in `tweeter.json` to match your public ELB host
 }
 ```
 
-## Run the Tweeter Service
+### Run the Tweeter Service
 
 Launch three instances of Tweeter on Marathon using the config file in this repo:
 
@@ -62,18 +116,18 @@ The service talks to Cassandra via `node-0.cassandra.mesos:9042`, and Kafka via 
 Traffic is routed to the service via marathon-lb. Navigate to `http://<public_elb>` to see the Tweeter UI and post a Tweet.
 
 
-## Post a lot of Tweets
+### Post a lot of Tweets
 
 Post a lot of Shakespeare tweets from a file:
 
-``` 
+```
 dcos marathon app add post-tweets.json
 ```
 
 This will post more than 100k tweets one by one, so you'll see them coming in steadily when you refresh the page. Take a look at the Networking page on the UI to see the load balancing in action.
 
 
-## Streaming Analytics
+### Streaming Analytics
 
 Next, we'll do real-time analytics on the stream of tweets coming in from Kafka.
 
@@ -90,59 +144,6 @@ NOTE: if /service/zeppelin is showing as Disconnected (and hence can’t load th
 `HAPROXY_GROUP = external`
 
 You can get the ELB hostname from the CCM “Public Server” link.  Once Zeppelin restarts, this should allow you to use that link to reach the Zeppelin GUI in “connected” mode.
-
-## Automated Tweeter Demo Setup
-
-`cli_script.sh` in this repository can be utilized to setup a tweeter demo
-cluster automatically.
-
-The steps below are applicable for Open DC/OS, when it does not have a super
-set. Instructions for Enterprise DC/OS will be similar can be obtained by
-consulting the `--help` option.
-
-1. Set `DCOS_URL` pointing to DCOS master.
-
-For e.g:
-
-```
-export DCOS_URL=http://54.70.182.15/
-```
-
-* Change the IP Address to your master ip of your cluste.r
-
-
-2. Login to dcos and copy the auth token
-
-```
-$ dcos auth login
-
-Please go to the following link in your browser:
-
-    http://54.70.182.15/login?redirect_uri=urn:ietf:wg:oauth:2.0:oob
-
-Enter authentication token:
-
-```
-
-3. Set DCOS Auth Token to the environment variable
-
-```
-export DCOS_AUTH_TOKEN=<TOKEN_FROM_PREVIOUS_STEP>
-```
-
-4. Run the cli script
-
-```
-$ ./cli_script.sh --oss
-```
-
-That's it.
-
-For more options, refer to.
-
-```
-$./cli_script.sh --help
-```
 
 ## Developing Tweeter
 
