@@ -48,6 +48,7 @@ INFRA_ONLY=false
 STEP_MODE=false
 MANUAL_MODE=false
 DCOS_OSS=false
+RUN_CYPRESS=false
 
 # Command Line Handler
 while [[ $# -gt 0 ]]; do
@@ -64,6 +65,8 @@ while [[ $# -gt 0 ]]; do
             MANUAL_MODE=true ;;
         --oss)
             DCOS_OSS=true ;;
+        --cypress)
+            RUN_CYPRESS=true ;;
         --url)
             DCOS_URL="$2"
             shift ;;
@@ -76,8 +79,6 @@ while [[ $# -gt 0 ]]; do
         -h|--help)
             echo "$USAGE"
             exit 0 ;;
-        --cypress)
-            RUN_CYPRESS=true ;;
         *)
             echo "Unrecognized option: $key"
             echo "$USAGE" >&2
