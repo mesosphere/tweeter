@@ -40,6 +40,7 @@ Options:
     --oss       Target DC/OS installation is an Open Source deployment
     --user      DC/OS Enterprise username (default: bootstrapuser)
     --pw        DC/OS Enterprise password (default: deleteme)
+    --cypress   Run cypress UI tests
                 "
 # Instantiate default options
 USE_STABLE=false
@@ -75,6 +76,8 @@ while [[ $# -gt 0 ]]; do
         -h|--help)
             echo "$USAGE"
             exit 0 ;;
+        --cypress)
+            RUN_CYPRESS=true ;;
         *)
             echo "Unrecognized option: $key"
             echo "$USAGE" >&2
@@ -260,7 +263,27 @@ demo_eval "dcos marathon app add post-tweets.json"
 wait_for_deployment post-tweets
 
 # short sleep to make sure tweets are posted
-sleep 15
+sleep 30
+
+# Run cypress tests if user opted-in.
+if $RUN_CYPRESS; then
+cat <<EOF > ci-conf.json
+{
+  "tweeter_url": "${public_ip}:10000",
+  "url": "${DCOS_URL}",
+  "username": "${DCOS_USER}",
+  "password": "${DCOS_PW}"
+}
+EOF
+
+  CYPRESS_RET=$(cypress --help &> /dev/null)
+  if [[ $CYPRESS_RET -eq 0 ]]; then
+    log_msg "Running cypress tests"
+    demo_eval "cypress run"
+  else
+    log_msg "cypress is not installed; skipping..."
+  fi
+fi
 
 # Now that tweets have been posted and the site is up, make sure it all works:
 log_msg "Pulling Tweets from $public_ip:10000"
