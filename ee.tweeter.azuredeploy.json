@@ -240,7 +240,7 @@
       "metadata": {
         "description": "The number of Mesos agents for the cluster.  This value can be from 1 to 100"
       },
-      "defaultValue": 5,
+      "defaultValue": 6,
       "allowedValues": [
         1,
         2,
