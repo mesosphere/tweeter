@@ -159,7 +159,7 @@ EOF
 oss_login() {
 cat <<EOF | expect -
 spawn dcos auth login
-expect "token:"
+expect "Token:"
 send "$DCOS_AUTH_TOKEN\n"
 expect eof
 EOF
