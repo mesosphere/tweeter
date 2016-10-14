@@ -30,6 +30,22 @@ azure config mode arm
 
 ```
 
+Setup the Azure storage account and capture connection string
+
+```
+	azure group create <resource_group>-static <location>
+
+	azure storage account create --type LRS --resource-group <resource_group>-static --location <location> <account_name>
+
+	azure storage account connectionstring show <account_name>
+
+    export AZURE_STORAGE_CONNECTION_STRING=<connection_string>
+
+	azure storage container create 1dot8
+
+    azure storage blob upload dcos_generate_config.ee.sh 1dot8 dcos_generate_config.ee.sh
+```
+
 Setup the Azure Cluster using the repo ARM template for 1.7.x
 
 ```
