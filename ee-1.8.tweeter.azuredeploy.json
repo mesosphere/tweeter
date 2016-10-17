@@ -1107,7 +1107,7 @@
       "name": "[concat(variables('masterVMNamePrefix'), sub(variables('masterCount'), 1), '/waitforleader')]",
       "properties": {
         "settings": {
-          "commandToExecute": "true;"
+          "commandToExecute": "bash -c true;"
         },
         "typeHandlerVersion": "1.4",
         "type": "CustomScriptForLinux",
