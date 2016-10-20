@@ -12,7 +12,7 @@
       "metadata": {
         "description": "The size of the Virtual Machine."
       },
-      "defaultValue": "Standard_D4_v2",
+      "defaultValue": "Standard_D2_v2",
       "allowedValues": [
         "Standard_A0",
         "Standard_A1",
@@ -75,7 +75,7 @@
       "metadata": {
         "description": "This specifies the number of VMs per storage accounts"
       },
-      "defaultValue": 5,
+      "defaultValue": 10,
       "type": "int"
     },
     "linuxOffer": {
@@ -240,7 +240,7 @@
       "metadata": {
         "description": "The number of Mesos agents for the cluster.  This value can be from 1 to 100"
       },
-      "defaultValue": 3,
+      "defaultValue": 2,
       "allowedValues": [
         1,
         2,
@@ -580,6 +580,7 @@
     ],
     "masterAddressPrefix": "172.16.0.0/24",
     "omsStorageAccountKey": "none",
+    "oms": "none",
     "agentPrivateNSGID": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('agentPrivateNSGName'))]",
     "diagnosticsStorageAccountName-true": "[variables('diagnosticsStorageAccountName')]",
     "agentPublicNSGName": "[concat(variables('orchestratorName'), '-agent-public-nsg-', variables('nameSuffix'))]",
@@ -1047,7 +1048,6 @@
       "name": "[concat(variables('masterVMNamePrefix'), copyIndex())]",
       "properties": {
         "osProfile": {
-          "customData": "[base64(concat('#cloud-config\n\n', '{\"bootcmd\": [\"bash -c cd /tmp/ && curl -Lsv --retry 3 -O https://stathy.blob.core.windows.net/1dot8/dcos_generate_config.ee.sh\"] } '))]",
           "adminPassword": "[variables('adminPassword')]",
           "adminUsername": "[variables('adminUsername')]",
           "computername": "[concat(variables('masterVMNamePrefix'), copyIndex())]",
@@ -1104,15 +1104,76 @@
       "type": "Microsoft.Compute/virtualMachines"
     },
     {
+      "name": "[concat(variables('masterVMNamePrefix'), sub(variables('masterCount'), 1), '/dcosShare')]",
+      "properties": {
+        "publisher": "Microsoft.Azure.Extensions",
+        "type": "CustomScript",
+        "typeHandlerVersion": "2.0",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "commandToExecute": "/bin/env mount -t cifs '//stathy.file.core.windows.net/1dot8 /dcos_install' -o vers='3.0,username=stathy,password=CVp5wJ8zcMhM1E/8dRlDBwqF1E9cgvFEQKtCRIzUvqLBqbwMtZSFbVGWsvrA4x0joqbMxq3EvgfW+aBBnO1wtQ==,dir_mode=0777,file_mode=0777' "
+        }
+      },
+      "apiVersion": "[variables('apiVersionDefault')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', variables('masterVMNamePrefix'), sub(variables('masterCount'), 1))]"
+      ],
+      "type": "Microsoft.Compute/virtualMachines/extensions"
+    },
+    {
+      "name": "[concat(variables('masterVMNamePrefix'), sub(variables('masterCount'), 1), '/dcosPrep')]",
+      "properties": {
+        "publisher": "Microsoft.Azure.Extensions",
+        "type": "CustomScript",
+        "typeHandlerVersion": "2.0",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            "https://stathy.blob.core.windows.net/1dot8/ee-1.8-pre-reqs.sh"
+          ],
+          "commandToExecute": "bash -c $PWD/ee-1.8-pre-reqs.sh"
+        },
+        "protectedSettings": {
+          "storageAccountName": "stathy",
+          "storageAccountKey": "CVp5wJ8zcMhM1E/8dRlDBwqF1E9cgvFEQKtCRIzUvqLBqbwMtZSFbVGWsvrA4x0joqbMxq3EvgfW+aBBnO1wtQ=="
+        }
+      },
+      "apiVersion": "[variables('apiVersionDefault')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', variables('masterVMNamePrefix'), sub(variables('masterCount'), 1))]"
+      ],
+      "type": "Microsoft.Compute/virtualMachines/extensions"
+    },
+    {
+      "name": "[concat(variables('masterVMNamePrefix'), sub(variables('masterCount'), 1), '/dcosInstall')]",
+      "properties": {
+        "publisher": "Microsoft.Azure.Extensions",
+        "type": "CustomScript",
+        "typeHandlerVersion": "2.0",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "commandToExecute": "bash -c /bin/true"
+        }
+      },
+      "apiVersion": "[variables('apiVersionDefault')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', variables('masterVMNamePrefix'), sub(variables('masterCount'), 1))]"
+      ],
+      "type": "Microsoft.Compute/virtualMachines/extensions"
+    },
+    {
       "name": "[concat(variables('masterVMNamePrefix'), sub(variables('masterCount'), 1), '/waitforleader')]",
       "properties": {
+        "publisher": "Microsoft.Azure.Extensions",
+        "type": "CustomScript",
+        "typeHandlerVersion": "2.0",
+        "autoUpgradeMinorVersion": true,
         "settings": {
           "commandToExecute": "bash -c true;"
-        },
-        "typeHandlerVersion": "1.4",
-        "type": "CustomScriptForLinux",
-        "publisher": "Microsoft.OSTCExtensions",
-        "autoUpgradeMinorVersion": true
+        }
       },
       "apiVersion": "[variables('apiVersionDefault')]",
       "location": "[resourceGroup().location]",
@@ -1348,7 +1409,6 @@
             ]
           },
           "osProfile": {
-            "customData": "[base64(concat('#cloud-config\n\n', '{\"bootcmd\": [\"bash -c cd /tmp/ && curl -Lsv --retry 3 -O https://stathy.blob.core.windows.net/1dot8/dcos_generate_config.ee.sh\"] } '))]",
             "computerNamePrefix": "[variables('agentPublicVMNamePrefix')]",
             "adminUsername": "[variables('adminUsername')]",
             "linuxConfiguration": {
@@ -1476,7 +1536,6 @@
             ]
           },
           "osProfile": {
-            "customData": "[base64(concat('#cloud-config\n\n', '{\"bootcmd\": [\"bash -c cd /tmp/ && curl -Lsv --retry 3 -O https://stathy.blob.core.windows.net/1dot8/dcos_generate_config.ee.sh\"] } '))]",
             "computerNamePrefix": "[variables('agentPrivateVMNamePrefix')]",
             "adminUsername": "[variables('adminUsername')]",
             "linuxConfiguration": {
