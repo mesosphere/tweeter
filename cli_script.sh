@@ -277,8 +277,7 @@ cat <<EOF > ci-conf.json
 }
 EOF
 
-  CYPRESS_RET=$(cypress --help &> /dev/null)
-  if [[ $CYPRESS_RET -eq 0 ]]; then
+  if (cypress --help &> /dev/null); then
     log_msg "Running cypress tests"
     demo_eval "cypress run"
   else
