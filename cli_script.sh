@@ -279,7 +279,7 @@ EOF
 
   if (cypress --help &> /dev/null); then
     log_msg "Running cypress tests"
-    demo_eval "cypress run"
+    demo_eval "cypress ci"
   else
     log_msg "cypress is not installed; skipping..."
   fi
