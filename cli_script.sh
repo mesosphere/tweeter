@@ -268,6 +268,14 @@ sleep 30
 
 # Run cypress tests if user opted-in.
 if $RUN_CYPRESS; then
+  if $DCOS_OSS; then
+cat <<EOF > ci-conf.json
+{
+  "tweeter_url": "${public_ip}:10000",
+  "url": "${DCOS_URL}"
+}
+EOF
+  else
 cat <<EOF > ci-conf.json
 {
   "tweeter_url": "${public_ip}:10000",
@@ -276,6 +284,7 @@ cat <<EOF > ci-conf.json
   "password": "${DCOS_PW}"
 }
 EOF
+  fi
 
   if (cypress --help &> /dev/null); then
     log_msg "Running cypress tests"
