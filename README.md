@@ -134,6 +134,7 @@ Edit the `HAPROXY_0_VHOST` label in `tweeter.json` to match your public ELB host
 ```json
 {
   "labels": {
+    "HAPROXY_GROUP": "external",
     "HAPROXY_0_VHOST": "brenden-7-publicsl-1dnroe89snjkq-221614774.us-west-2.elb.amazonaws.com"
   }
 }
