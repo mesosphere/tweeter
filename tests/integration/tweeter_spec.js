@@ -36,7 +36,8 @@ describe('Tweeter Demo', function() {
         if ('username' in settings && settings['username'] != '') {
           cy.eelogin(settings.username, settings.password)
 
-          cy.get('li>a').contains('Network').click()
+          cy.get('.sidebar-menu-item-label').contains('Networking').click();
+          cy.get('.sidebar-menu-item a').contains('Service Addresses').click();
           // find the 1.1.1.1 network and click on it
           cy.get('table tbody tr td a').contains('1.1.1').click()
           // there should be a canvas element. this is where the graph
