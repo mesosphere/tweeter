@@ -248,7 +248,8 @@ cat <<EOF > public-ip.json
 EOF
 demo_eval "dcos marathon app add public-ip.json"
 wait_for_deployment public-ip
-public_ip=`dcos task log --lines=1 public-ip`
+public_ip_str=`dcos task log --lines=1 public-ip`
+public_ip="${public_ip_str##* }"
 demo_eval "dcos marathon app remove public-ip"
 
 log_msg "Tweeter home page can be found at: http://$public_ip:10000/"
