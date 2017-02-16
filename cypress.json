@@ -1,8 +1,8 @@
 {
-  "fixturesFolder":     "tests/fixtures",
-  "integrationFolder":  "tests/integration",
-  "screenshotsFolder":  "tests/screenshots",
-  "supportFolder":      "tests/support",
+  "fixturesFolder": "tests/fixtures",
+  "integrationFolder": "tests/integration",
+  "screenshotsFolder": "tests/screenshots",
   "screenshotOnHeadlessFailure": false,
-  "pageLoadTimeout":    120000
+  "pageLoadTimeout": 120000,
+  "supportFile": "tests/support/commands.js"
 }
