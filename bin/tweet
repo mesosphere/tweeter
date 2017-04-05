@@ -2,6 +2,6 @@
 
 while read json
 do
-  curl -sS -H 'Content-Type: application/json' --data-binary "$json" "$2/tweets" > /dev/null
+  curl -ksS -H 'Content-Type: application/json' --data-binary "$json" "$2/tweets" > /dev/null
   echo $json
 done < "$1"
