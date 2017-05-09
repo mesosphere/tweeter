@@ -147,7 +147,7 @@ wait_for_deployment() {
 
 ee_login() {
 cat <<EOF | expect -
-spawn dcos auth login
+spawn dcos cluster setup "$DCOS_URL" --no-check
 expect "username:"
 send "$DCOS_USER\n"
 expect "password:"
@@ -158,7 +158,7 @@ EOF
 
 oss_login() {
 cat <<EOF | expect -
-spawn dcos auth login
+spawn dcos cluster setup "$DCOS_URL"
 expect "Token:"
 send "$DCOS_AUTH_TOKEN\n"
 expect eof
@@ -170,7 +170,6 @@ dcos --help &> /dev/null || ( echo 'DC/OS must be installed!' && exit 1 )
 
 # Setup access to the desired DCOS cluster and install marathon lb
 log_msg "Setting DCOS CLI to use $DCOS_URL"
-demo_eval "dcos config set core.dcos_url $DCOS_URL"
 if $DCOS_OSS; then
     log_msg "Starting DC/OS OSS Demo"
     log_msg "Override default credentials with DCOS_AUTH_TOKEN"
