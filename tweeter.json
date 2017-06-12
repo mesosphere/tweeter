@@ -15,6 +15,7 @@
           "containerPort": 3000,
           "hostPort": 0,
           "servicePort": 10000,
+          "name": "ui",
           "labels": {
             "VIP_0": "1.1.1.1:30000"
           }
