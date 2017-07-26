@@ -118,7 +118,7 @@ $ dcos package install kafka --cli
 $ dcos package install zeppelin
 ```
 
-Wait until the Kafka and Cassandra services are healthly. You can check their status with:
+Wait until the Kafka and Cassandra services are healthy. You can check their status with:
 
 ```
 $ dcos kafka connection
