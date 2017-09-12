@@ -1,0 +1,23 @@
+{
+  "id": "/post-tweets",
+  "cmd": "bin/tweet shakespeare-tweets.json http://1.1.1.1:30000",
+  "cpus": 0.25,
+  "mem": 256,
+  "disk": 0,
+  "instances": 1,
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "mesosphere/tweeter",
+      "network": "BRIDGE",
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "hostPort": 0,
+          "servicePort": 10101,
+          "protocol": "tcp"
+        }
+      ]
+    }
+  }
+}
