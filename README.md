@@ -129,7 +129,9 @@ $ dcos cassandra connection
 
 ### Edit the Tweeter Service Config
 
-Edit the `HAPROXY_0_VHOST` label in `tweeter.json` to match your public ELB hostname. If you are running DC/OS 1.8 or DC/OS 1.9, please use the `tweeter.json` file located in the 1.8 or 1.9 folder. Be sure to remove the leading `http://` and the trailing `/` For example:
+The top-level `tweeter.json` is meant to work with the current master branches of [dcos](https://github.com/dcos/dcos/commits/master) and [dcos-enterprise](https://github.com/mesosphere/dcos-enterprise/commits/master). If you are running a versioned DC/OS cluster, please use the `tweeter.json` file located in the appropriate version folder. e.g. `1.9/tweeter.json`.
+
+Edit the `HAPROXY_0_VHOST` label in `tweeter.json` to match your public ELB hostname. Be sure to remove the leading `http://` and the trailing `/` For example:
 
 ```json
 {
