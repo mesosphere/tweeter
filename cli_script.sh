@@ -108,6 +108,31 @@ demo_eval() {
         log_msg "Executing: $1"
         eval $1
     fi
+
+    # assume login complete; check versions of dc/os and cli
+    DCOS_VERSION=$(dcos --version | grep "dcos.version" | cut -d'=' -f2)
+    if [ "$DCOS_VERSION" = "N/A" ]; then
+        errlen=$((49 + ${#DCOS_CLI_VER}))
+        printf '*%.s' $(eval "echo {1.."$(($errlen))"}")
+        printf "\n* Unable to determine DC/OS version with CLI (%s) *\n" $DCOS_CLI_VER
+        printf '*%.s' $(eval "echo {1.."$(($errlen))"}")
+        printf "\n"
+        exit 1
+    fi
+    # DC/OS Version Minor
+    DVM=$(echo $DCOS_VERSION | cut -d'.' -f2 | tr -cd "[:digit:]")
+    is_compat=0
+    [ $DVM -lt 10 ] && [ $DCVM -gt 4 ] && is_compat=1
+    [ $DVM -gt 9 ] && [ $DCVM -lt 5 ] && is_compat=1
+
+    if [ $is_compat -ne 0 ]; then
+        errlen=$((45 + ${#DCOS_VERSION} + ${#DCOS_CLI_VER}))
+        printf '*%.s' $(eval "echo {1.."$(($errlen))"}")
+        printf "\n* Incompatible DC/OS (%s) and CLI (%s) versions *\n" $DCOS_VERSION $DCOS_CLI_VER
+        printf '*%.s' $(eval "echo {1.."$(($errlen))"}")
+        printf "\n"
+        exit 1
+    fi
     user_continue
 }
 
@@ -146,8 +171,9 @@ wait_for_deployment() {
 }
 
 ee_login() {
+[ $USE_CLUSTER -eq 1 ] && cmd="cluster setup \"$DCOS_URL\" --no-check" || cmd="auth login"
 cat <<EOF | expect -
-spawn dcos cluster setup "$DCOS_URL" --no-check
+spawn dcos $cmd
 expect "username:"
 send "$DCOS_USER\n"
 expect "password:"
@@ -167,9 +193,14 @@ EOF
 
 # Check DC/OS CLI is actually installed
 dcos --help &> /dev/null || ( echo 'DC/OS must be installed!' && exit 1 )
+DCOS_CLI_VER=$(dcos --version | grep dcoscli | cut -d'=' -f2)
+# DC/OS CLI Version Minor
+DCVM=$(echo $DCOS_CLI_VER | cut -d'.' -f2 | tr -cd "[:digit:]")
+[ $DCVM -gt 4 ] && USE_CLUSTER=1 || USE_CLUSTER=0
 
 # Setup access to the desired DCOS cluster and install marathon lb
 log_msg "Setting DCOS CLI to use $DCOS_URL"
+[ $USE_CLUSTER -eq 0 ] && demo_eval "dcos config set core.dcos_url $DCOS_URL"
 if $DCOS_OSS; then
     log_msg "Starting DC/OS OSS Demo"
     log_msg "Override default credentials with DCOS_AUTH_TOKEN"
