@@ -121,9 +121,9 @@ $ dcos package install zeppelin
 Wait until the Kafka and Cassandra services are healthy. You can check their status with:
 
 ```
-$ dcos kafka connection
+$ dcos kafka endpoints broker
 ...
-$ dcos cassandra connection
+$ dcos cassandra endpoints node
 ...
 ```
 
