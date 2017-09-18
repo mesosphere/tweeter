@@ -147,7 +147,7 @@ wait_for_deployment() {
 
 ee_login() {
 cat <<EOF | expect -
-spawn dcos auth login
+spawn dcos cluster setup "$DCOS_URL" --no-check
 expect "username:"
 send "$DCOS_USER\n"
 expect "password:"
@@ -158,7 +158,7 @@ EOF
 
 oss_login() {
 cat <<EOF | expect -
-spawn dcos auth login
+spawn dcos cluster setup "$DCOS_URL"
 expect "Token:"
 send "$DCOS_AUTH_TOKEN\n"
 expect eof
@@ -170,7 +170,6 @@ dcos --help &> /dev/null || ( echo 'DC/OS must be installed!' && exit 1 )
 
 # Setup access to the desired DCOS cluster and install marathon lb
 log_msg "Setting DCOS CLI to use $DCOS_URL"
-demo_eval "dcos config set core.dcos_url $DCOS_URL"
 if $DCOS_OSS; then
     log_msg "Starting DC/OS OSS Demo"
     log_msg "Override default credentials with DCOS_AUTH_TOKEN"
@@ -249,7 +248,8 @@ cat <<EOF > public-ip.json
 EOF
 demo_eval "dcos marathon app add public-ip.json"
 wait_for_deployment public-ip
-public_ip=`dcos task log --lines=1 public-ip`
+public_ip_str=`dcos task log --lines=1 public-ip`
+public_ip="${public_ip_str##* }"
 demo_eval "dcos marathon app remove public-ip"
 
 log_msg "Tweeter home page can be found at: http://$public_ip:10000/"
@@ -268,9 +268,20 @@ wait_for_deployment post-tweets
 
 # Run cypress tests if user opted-in.
 if $RUN_CYPRESS; then
+<<<<<<< HEAD
 
 # short sleep to make sure tweets are posted
 sleep 30
+=======
+  if $DCOS_OSS; then
+cat <<EOF > ci-conf.json
+{
+  "tweeter_url": "${public_ip}:10000",
+  "url": "${DCOS_URL}"
+}
+EOF
+  else
+>>>>>>> master
 cat <<EOF > ci-conf.json
 {
   "tweeter_url": "${public_ip}:10000",
@@ -279,11 +290,12 @@ cat <<EOF > ci-conf.json
   "password": "${DCOS_PW}"
 }
 EOF
+  fi
 
-  CYPRESS_RET=$(cypress --help &> /dev/null)
-  if [[ $CYPRESS_RET -eq 0 ]]; then
+  if (cypress --help &> /dev/null); then
     log_msg "Running cypress tests"
-    demo_eval "cypress run"
+    demo_eval "yes | cypress update"
+    demo_eval "yes | cypress run"
   else
     log_msg "cypress is not installed; skipping..."
   fi

@@ -132,22 +132,23 @@ $ dcos package install kafka --cli
 $ dcos package install zeppelin
 ```
 
-Wait until the Kafka and Cassandra services are healthly. You can check their status with:
+Wait until the Kafka and Cassandra services are healthy. You can check their status with:
 
 ```
-$ dcos kafka connection
+$ dcos kafka endpoints broker
 ...
-$ dcos cassandra connection
+$ dcos cassandra endpoints node
 ...
 ```
 
 ### Edit the Tweeter Service Config
 
-Edit the `HAPROXY_0_VHOST` label in `tweeter.json` to match your public ELB hostname. Be sure to remove the leading `http://` and the trailing `/` For example:
+Edit the `HAPROXY_0_VHOST` label in `tweeter.json` to match your public ELB hostname. If you are running DC/OS 1.8 or DC/OS 1.9, please use the `tweeter.json` file located in the 1.8 or 1.9 folder. Be sure to remove the leading `http://` and the trailing `/` For example:
 
 ```json
 {
   "labels": {
+    "HAPROXY_GROUP": "external",
     "HAPROXY_0_VHOST": "brenden-7-publicsl-1dnroe89snjkq-221614774.us-west-2.elb.amazonaws.com"
   }
 }
