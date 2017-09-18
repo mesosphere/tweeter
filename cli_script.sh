@@ -268,11 +268,6 @@ wait_for_deployment post-tweets
 
 # Run cypress tests if user opted-in.
 if $RUN_CYPRESS; then
-<<<<<<< HEAD
-
-# short sleep to make sure tweets are posted
-sleep 30
-=======
   if $DCOS_OSS; then
 cat <<EOF > ci-conf.json
 {
@@ -281,7 +276,6 @@ cat <<EOF > ci-conf.json
 }
 EOF
   else
->>>>>>> master
 cat <<EOF > ci-conf.json
 {
   "tweeter_url": "${public_ip}:10000",
