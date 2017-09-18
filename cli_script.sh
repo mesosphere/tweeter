@@ -179,7 +179,7 @@ else
     log_msg "Override default credentials with --user and --pw"
     demo_eval ee_login
     # Get the dcos EE CLI
-    # demo_eval 'dcos package install --cli --yes dcos-enterprise-cli'
+    demo_eval 'dcos package install --cli --yes dcos-enterprise-cli'
     demo_eval 'dcos security org service-accounts keypair -l 4096 k.priv k.pub'
     demo_eval 'dcos security org service-accounts create -p k.pub -d "Marathon LB" dcos_marathon_lb'
     demo_eval 'dcos security secrets create-sa-secret k.priv dcos_marathon_lb marathon-lb'
