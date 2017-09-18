@@ -40,6 +40,7 @@ Options:
     --oss       Target DC/OS installation is an Open Source deployment
     --user      DC/OS Enterprise username (default: bootstrapuser)
     --pw        DC/OS Enterprise password (default: deleteme)
+    --cypress   Run cypress UI tests
                 "
 # Instantiate default options
 USE_STABLE=false
@@ -47,6 +48,7 @@ INFRA_ONLY=false
 STEP_MODE=false
 MANUAL_MODE=false
 DCOS_OSS=false
+RUN_CYPRESS=false
 
 # Command Line Handler
 while [[ $# -gt 0 ]]; do
@@ -63,6 +65,8 @@ while [[ $# -gt 0 ]]; do
             MANUAL_MODE=true ;;
         --oss)
             DCOS_OSS=true ;;
+        --cypress)
+            RUN_CYPRESS=true ;;
         --url)
             DCOS_URL="$2"
             shift ;;
@@ -155,7 +159,7 @@ EOF
 oss_login() {
 cat <<EOF | expect -
 spawn dcos auth login
-expect "token:"
+expect "Token:"
 send "$DCOS_AUTH_TOKEN\n"
 expect eof
 EOF
@@ -176,7 +180,7 @@ else
     log_msg "Override default credentials with --user and --pw"
     demo_eval ee_login
     # Get the dcos EE CLI
-    demo_eval 'dcos package install --cli --yes dcos-enterprise-cli'
+    # demo_eval 'dcos package install --cli --yes dcos-enterprise-cli'
     demo_eval 'dcos security org service-accounts keypair -l 4096 k.priv k.pub'
     demo_eval 'dcos security org service-accounts create -p k.pub -d "Marathon LB" dcos_marathon_lb'
     demo_eval 'dcos security secrets create-sa-secret k.priv dcos_marathon_lb marathon-lb'
@@ -226,7 +230,6 @@ done
 # query until services are listed as running
 wait_for_deployment ${install_packages[*]}
 
-
 # once running, deploy tweeter app and then post to it
 demo_eval "dcos marathon app add tweeter.json"
 wait_for_deployment tweeter
@@ -261,8 +264,30 @@ fi
 demo_eval "dcos marathon app add post-tweets.json"
 wait_for_deployment post-tweets
 
+
+
+# Run cypress tests if user opted-in.
+if $RUN_CYPRESS; then
+
 # short sleep to make sure tweets are posted
-sleep 15
+sleep 30
+cat <<EOF > ci-conf.json
+{
+  "tweeter_url": "${public_ip}:10000",
+  "url": "${DCOS_URL}",
+  "username": "${DCOS_USER}",
+  "password": "${DCOS_PW}"
+}
+EOF
+
+  CYPRESS_RET=$(cypress --help &> /dev/null)
+  if [[ $CYPRESS_RET -eq 0 ]]; then
+    log_msg "Running cypress tests"
+    demo_eval "cypress run"
+  else
+    log_msg "cypress is not installed; skipping..."
+  fi
+fi
 
 # Now that tweets have been posted and the site is up, make sure it all works:
 log_msg "Pulling Tweets from $public_ip:10000"

@@ -1,0 +1,5 @@
+{
+  "marathon-lb": {
+    "secret_name": "marathon-lb"
+  }
+}
