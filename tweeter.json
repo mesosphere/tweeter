@@ -29,9 +29,15 @@
   },
   "healthChecks": [
     {
-      "path": "/",
-      "protocol": "HTTP",
-      "portIndex": 0
+     "gracePeriodSeconds": 90,
+     "ignoreHttp1xx": false,
+     "intervalSeconds": 30,
+     "maxConsecutiveFailures": 6,
+     "path": "/",
+     "portIndex": 0,
+     "protocol": "HTTP",
+     "timeoutSeconds": 20,
+     "delaySeconds": 15
     }
   ],
   "labels": {
