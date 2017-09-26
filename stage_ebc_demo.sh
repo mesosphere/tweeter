@@ -40,7 +40,7 @@ echo $DCOS_URL
 echo $DCOS_PUB_ELB
 
 #Run CI Script in infrastructure mode
-for i in `dcos cluster list | awk ' FNR > 1 { print $1 }'`; do dcos cluster remove $i; done
+for i in `dcos cluster list | awk ' FNR > 1 { print $1 }' | sed 's/\*//'`; do dcos cluster remove $i; done
 
 bash cli_script.sh --url $DCOS_URL --infra
 
