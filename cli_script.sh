@@ -126,7 +126,12 @@ return
 is_running() {
     status=`dcos marathon app list | grep $1 | awk '{print $6}'`
     if [[ $status = '---' ]]; then
-        return 0
+	framework_status=$((`dcos $1 plan status deploy | grep '^deploy' | grep COMPLETE | awk '{print $2}'`) 2>&1)
+	if [[ $framework_status = *"COMPLETE"* || $framework_status = *"not a dcos command"* ]]; then
+        	return 0
+	else
+		return 1
+	fi
     else
         return 1
     fi
