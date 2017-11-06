@@ -148,7 +148,7 @@ Launch three instances of Tweeter on Marathon using the config file in this repo
 $ dcos marathon app add tweeter.json
 ```
 
-The service talks to Cassandra via `node-0.cassandra.mesos:9042`, and Kafka via `broker-0.kafka.mesos:9557` in this example.
+The service talks to Cassandra via `node-0-server.cassandra.autoip.dcos.thisdcos.directory`, and Kafka via `broker.kafka.l4lb.thisdcos.directory:9092` in this example.
 
 Traffic is routed to the service via marathon-lb. Navigate to `http://<public_elb>` to see the Tweeter UI and post a Tweet.
 
