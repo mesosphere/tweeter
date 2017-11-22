@@ -107,7 +107,7 @@ PLATFORMS
 DEPENDENCIES
   cassandra-driver (~> 3.0)
   rails (= 4.1.14.2)
-  rubocop
+  rubocop (~> 0.51.0)
   ruby-kafka (~> 0.2.0)
   sass-rails (~> 4.0.3)
   spring
