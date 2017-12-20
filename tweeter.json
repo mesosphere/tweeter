@@ -1,6 +1,6 @@
 {
   "id": "/tweeter",
-  "cmd": "export KAFKA_BROKERS='broker.kafka.l4lb.thisdcos.directory:9092' && until rake cassandra:setup; do sleep 5; done && rails server",
+  "cmd": "export KAFKA_BROKERS='broker.kafka.l4lb.thisdcos.directory:9092' && until rake cassandra:setup; do sleep 5; done && rails server --binding 0.0.0.0",
   "cpus": 0.25,
   "mem": 256,
   "disk": 0,
