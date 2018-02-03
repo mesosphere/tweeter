@@ -23,15 +23,21 @@
     }
   },
   "env": {
-    "CASSANDRA_HOSTS": "node-0-server.cassandra.autoip.dcos.thisdcos.directory",
+    "CASSANDRA_HOSTS": "node.cassandra.l4lb.thisdcos.directory",
     "RAILS_ENV": "production",
     "SECRET_KEY_BASE": "be6ea21bd0e8ddad06accbdfbfcbc6f120815744a8177fb1196442c1670401c86a1d020f1fb62f9b7d6bacc8cf818de277d23d3f3e7dcf704ca88965e5b9ed86"
   },
   "healthChecks": [
     {
-      "path": "/",
-      "protocol": "HTTP",
-      "portIndex": 0
+     "gracePeriodSeconds": 90,
+     "ignoreHttp1xx": false,
+     "intervalSeconds": 30,
+     "maxConsecutiveFailures": 6,
+     "path": "/",
+     "portIndex": 0,
+     "protocol": "HTTP",
+     "timeoutSeconds": 20,
+     "delaySeconds": 15
     }
   ],
   "labels": {

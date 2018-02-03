@@ -126,7 +126,12 @@ return
 is_running() {
     status=`dcos marathon app list | grep $1 | awk '{print $6}'`
     if [[ $status = '---' ]]; then
-        return 0
+	framework_status=$((`dcos $1 plan status deploy | grep '^deploy' | grep COMPLETE | awk '{print $2}'`) 2>&1)
+	if [[ $framework_status = *"COMPLETE"* || $framework_status = *"not a dcos command"* ]]; then
+        	return 0
+	else
+		return 1
+	fi
     else
         return 1
     fi
@@ -225,6 +230,7 @@ for pkg in ${install_packages[*]}; do
     demo_eval "$cmd"
 done
 
+
 # query until services are listed as running
 wait_for_deployment ${install_packages[*]}
 
@@ -263,8 +269,7 @@ fi
 demo_eval "dcos marathon app add post-tweets.json"
 wait_for_deployment post-tweets
 
-# short sleep to make sure tweets are posted
-sleep 30
+
 
 # Run cypress tests if user opted-in.
 if $RUN_CYPRESS; then
